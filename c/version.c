@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-
-#define VER_MAJOR(version) 	((version & 0xFF000000) >> 24)
-#define VER_MINOR(version) 	((version & 0x00FF0000) >> 16)
+/* <major>.<minor>.<release>.<patch> */
+#define VER_MAJOR(version) 	    ((version & 0xFF000000) >> 24)
+#define VER_MINOR(version) 	    ((version & 0x00FF0000) >> 16)
 #define VER_RELEASE(version)    ((version & 0x0000FF00) >>  8)
-#define VER_PATCH(version)	(version & 0x000000FF)
+#define VER_PATCH(version)	    ((version & 0x000000FF) >>  0)
 
 int main(int argc, char *argv[]) {
     int version = 0x08040201;
