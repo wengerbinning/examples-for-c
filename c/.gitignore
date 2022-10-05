@@ -1,0 +1,9 @@
+**/*.o
+**/*.so
+**/*.a
+
+.build/**
+
+
+helloworld
+version
