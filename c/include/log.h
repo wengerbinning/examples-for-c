@@ -14,7 +14,7 @@
 #define WARNNING_LEVEL_C    3
 
 #define INFO_LEVEL_MASK     0xFF
-#define3 INFO_LEVEL_A        1
+#define INFO_LEVEL_A        1
 #define INFO_LEVEL_B        2
 #define INFO_LEVEL_C        3
 
@@ -40,5 +40,10 @@
 #else
 #define debug(level, fmt, ...) do {} while(0)
 #endif /* DEBUG */
+
+#define LOG_LEVEL_DEBUG
+#define LOG_LEVEL_INFO
+#define LOG_LEVEL_WARNNING
+#define LOG_LEVEL_ERROR
 
 #endif /* __LOG_H__ */
