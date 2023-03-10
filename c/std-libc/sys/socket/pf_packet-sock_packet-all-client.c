@@ -13,7 +13,7 @@
 
 #include "ethertype.h"
 
-int main (int argc, char argv[]) {
+int pf_packet_packet_all_client (const char * iface) {
 	int sock;
 	struct sockaddr addr;
 	// char buffer[1024];
@@ -23,7 +23,7 @@ int main (int argc, char argv[]) {
 		exit(sock);
 	}
 
-	strcpy(addr.sa_data, "enp6s0");
+	strcpy(addr.sa_data, iface);
 
 	// debug("#%02x", CHAR(ETHER_TYPE_8021Q_CVID, 0));
 
