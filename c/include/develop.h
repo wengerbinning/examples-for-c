@@ -4,7 +4,7 @@
 #define error(fmt, ...) \
 	printf(fmt"\n", ## __VA_ARGS__)
 
-#define warnning(fmt, ...) \
+#define warning(fmt, ...) \
 	printf(fmt"\n", ## __VA_ARGS__)
 
 #define info(fmt, ...) \

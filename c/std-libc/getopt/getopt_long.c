@@ -30,7 +30,7 @@ int parse_long_options (const struct option *opt, int idx, struct param_t *param
         info("handling long option version");
         break;
     default:
-        warnning("Unknown handling this option: --%s", opt[idx].name);
+        warning("Unknown handling this option: --%s", opt[idx].name);
     }
 }
 
@@ -56,7 +56,7 @@ int main (int argc, char *argv[]) {
         case '?':
         /* Handle unknown valid option. */
         default:
-            warnning("Unknown handling this option: -%c", opt);
+            warning("Unknown handling this option: -%c", opt);
         }
     } 
 

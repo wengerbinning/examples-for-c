@@ -65,7 +65,7 @@ static inline int parse_long_options (const struct option *opt, int idx, struct 
 		break;
 
 	default:
-		warnning("Unknown handling this option: --%s", opt[idx].name);
+		warning("Unknown handling this option: --%s", opt[idx].name);
 	}
 }
 
@@ -108,13 +108,18 @@ int main (int argc, char *argv[]) {
 		case '?':
 		/* Handle unknown valid option. */
 		default:
-			warnning("Unknown handling this option: -%c", opt);
+			warning("Unknown handling this option: -%c", opt);
 			help(argv[0]);
 			return 0;
 		}
 	} 
 
 	dump_param(&param);
+
+    pf_packet_packet_all(param.interface);
+
+
+
 
 	return 0;
 }

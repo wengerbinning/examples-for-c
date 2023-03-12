@@ -8,25 +8,34 @@ CXXFLAGS=
 
 ECHO = echo
 
-CPPFLAGS = -I$(PROJECT)/include
+CPPFLAGS = -I$(PROJECT)/include -Iinclude
 LDFLAGS=
 
-LIBS=
 
-all: socket data
+AR = ar
+
+all: executable library
+
+executable: socket
+library: libpacket.a libsocket.a
+
+LIBS = libsocket.a libpacket.a
 
 
-LIBS = 
 
 
 
-data: data.o
+libpacket.a: data.o
+	@$(ECHO) [AR] $@
+	@$(AR) crs $@ $^
+
+libsocket.a: pf_packet-sock_packet-all.o
+	@$(ECHO) [AR] $@
+	@$(AR) crs $@ $^
+
+socket: socket.o $(LIBS)
 	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)	
-
-socket: socket.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
 	@$(ECHO) [CC] $^
@@ -34,6 +43,7 @@ socket: socket.o
 
 clean:
 	@rm -rf *.o
+	@rm -rf *.a
 
 
 

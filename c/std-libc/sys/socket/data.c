@@ -6,10 +6,8 @@
 #include "tools.h"
 #include "develop.h"
 
-char path[] = "packet";
-
 // FIXME: malloc size need free.
-char *read_packet (const char *path) {
+int new_packet (void **packet, const char *path) {
     FILE *fp;
     int len;
     void *buf;
@@ -29,12 +27,19 @@ char *read_packet (const char *path) {
 
     hexdump(buf, len);
 
+    debug("%p, %p", packet, buf);
+
     fclose(fp);
 
-    return buf;
+    *packet = buf;
+
+    return len;
 }
 
 
+void free_packet (char *packet) {
+    free(packet);
+}
 
 
 int hexdump (void *ptr, int size) {
