@@ -67,12 +67,11 @@ int pf_packet_packet_all (const char * iface) {
 //	0x0
 //	};len
 
-
-    len = new_packet(&packet, ETH_802_1Q_PACKET);
-
+    len = new_packet(&packet, DEFAULT_PACKET);
+	if (len < 0) 
+		return -1;
+	
     hexdump(packet, len);
-
-    debug("%p", packet);
 
 	sendto(sock, packet, len, 0, &addr, sizeof(addr));
 

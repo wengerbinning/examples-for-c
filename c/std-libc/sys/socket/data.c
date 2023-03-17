@@ -13,6 +13,8 @@ int new_packet (void **packet, const char *path) {
     void *buf;
 
     fp = fopen(path, "rb");
+    if (fp < 0)
+        return -1;
     fseek(fp, 0, SEEK_END);
     len = ftell(fp);
     
@@ -24,10 +26,6 @@ int new_packet (void **packet, const char *path) {
     
     fseek(fp, 0, SEEK_SET);
     fread(buf, len, 1, fp);
-
-    hexdump(buf, len);
-
-    debug("%p, %p", packet, buf);
 
     fclose(fp);
 
@@ -44,12 +42,12 @@ void free_packet (char *packet) {
 
 int hexdump (void *ptr, int size) {
     int i;
-    char *p;
+    unsigned char *p;
 
     content("Print %d bytes data >>> ", size);
     
     for (i = 0; i < size; i++) {
-        p = (char *)(ptr + i);
+        p = (unsigned char *)(ptr + i);
         if ((i % 16) == 0) {
             content("\n0x%04X: %02X", i, *p);
         } else if ((i % 2) == 0) {
@@ -58,7 +56,7 @@ int hexdump (void *ptr, int size) {
             content("%02X", *p);
         }
     }
-    info("\nover");
+    info("");
 
     return 0;
 }
