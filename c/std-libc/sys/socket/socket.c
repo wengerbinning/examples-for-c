@@ -4,6 +4,7 @@
 #include <string.h>
 #include <getopt.h>
 
+#include "socket.h"
 #include "develop.h"
 
 struct param_t {
@@ -73,6 +74,7 @@ int main (int argc, char *argv[]) {
 	int opt, idx;
 	struct param_t param;
 	char buffer[64];
+    int i;
 
 	if (argc <= 1) {
 		help(argv[0]);
@@ -112,7 +114,13 @@ int main (int argc, char *argv[]) {
 			help(argv[0]);
 			return 0;
 		}
-	} 
+	}
+
+    if (optind < argc) {
+        for (i = optind; i < argc; i++) {
+            printf("argv[%d] =  %s\n", i, argv[i]);
+        }
+    }
 
 	dump_param(&param);
 
