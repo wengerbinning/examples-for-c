@@ -12,9 +12,15 @@ int new_packet (void **packet, const char *path) {
     int len;
     void *buf;
 
+    debug("Running in here 1");
     fp = fopen(path, "rb");
-    if (fp < 0)
+    if (!fp) {
+        error("Failed to open %s", path);
         return -1;
+    }
+
+    debug("Running in here %d", fp);
+
     fseek(fp, 0, SEEK_END);
     len = ftell(fp);
     

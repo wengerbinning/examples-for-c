@@ -68,8 +68,10 @@ int pf_packet_packet_all (const char * iface) {
 //	};len
 
     len = new_packet(&packet, DEFAULT_PACKET);
-	if (len < 0) 
-		return -1;
+	if (len < 0) {
+        close(sock);
+        return -1;
+    }
 	
     hexdump(packet, len);
 
