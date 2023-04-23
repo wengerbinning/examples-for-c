@@ -12,23 +12,16 @@ int new_packet (void **packet, const char *path) {
     int len;
     void *buf;
 
-    debug("Running in here 1");
     fp = fopen(path, "rb");
     if (!fp) {
         error("Failed to open %s", path);
         return -1;
     }
 
-    debug("Running in here %d", fp);
-
     fseek(fp, 0, SEEK_END);
     len = ftell(fp);
-    
-
-    info("Found file size %dB", len);
 
     buf = (char  *) malloc(len);
-    debug("Malloc %d size, size: %d ", len, sizeof(buf));
     
     fseek(fp, 0, SEEK_SET);
     fread(buf, len, 1, fp);
@@ -50,7 +43,7 @@ int hexdump (void *ptr, int size) {
     int i;
     unsigned char *p;
 
-    content("Print %d bytes data >>> ", size);
+    content("Print packet data(%dB): ", size);
     
     for (i = 0; i < size; i++) {
         p = (unsigned char *)(ptr + i);

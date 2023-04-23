@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#include "socket.h"
 #include "packet.h"
 #include "develop.h"
 #include "tools.h"
@@ -16,7 +17,7 @@
 
 
 
-int pf_packet_packet_all (const char * iface) {
+int pf_packet_packet_all (struct socket_param_t *param) {
 	int sock, len;
 	struct sockaddr addr;
 	// char buffer[1024];
@@ -27,7 +28,7 @@ int pf_packet_packet_all (const char * iface) {
 		exit(sock);
 	}
 
-	strcpy(addr.sa_data, iface);
+	strcpy(addr.sa_data, param->iface);
 
 
 	// debug("#%02x", CHAR(ETHER_TYPE_8021Q_CVID, 0));
@@ -67,7 +68,7 @@ int pf_packet_packet_all (const char * iface) {
 //	0x0
 //	};len
 
-    len = new_packet(&packet, DEFAULT_PACKET);
+    len = new_packet(&packet, param->file);
 	if (len < 0) {
         close(sock);
         return -1;

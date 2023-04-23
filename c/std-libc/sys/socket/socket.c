@@ -7,13 +7,7 @@
 #include "socket.h"
 #include "develop.h"
 
-struct param_t {
-	char *prog;
-	int verbose;
-	int server;
-	char interface[128];
-	char address[64];
-};
+
 
 enum options_idx {
 	OPT_HELP,
@@ -27,6 +21,8 @@ enum options_idx {
 	OPT_SERVER,
 	/* Client option */
 	OPT_PARALLEL,
+	OPT_DATA_BIN_PACKET,
+	OPT_DATA_XML_PACKET,
 
 	__OPT_MAX
 };
@@ -42,13 +38,18 @@ static struct option long_options[__OPT_MAX] = {
 	[OPT_BIND]     = {"bind",       required_argument, 0, 0},
 	[OPT_SERVER]   = {"server",     no_argument,       0, 0},
 	[OPT_PARALLEL] = {"parallel",   required_argument, 0, 0},
+	
+	[OPT_DATA_BIN_PACKET] = {"binary", 	no_argument, 	0, 0},
+
 };
+
+static struct socket_param_t param;
 
 int help (const char *prog);
 int version (const char *prog);
-int dump_param (const struct param_t *param);
+int dump_param (const struct socket_param_t *param);
 
-static inline int parse_long_options (const struct option *opt, int idx, struct param_t *param) {
+static inline int parse_long_options (const struct option *opt, int idx, struct socket_param_t *param) {
 	switch (idx) {
 	case OPT_HELP:
 		help(prog_name);
@@ -59,7 +60,7 @@ static inline int parse_long_options (const struct option *opt, int idx, struct 
 		return 0;
 	
 	case OPT_INTEFACE:
-		strncpy(param->interface, optarg, sizeof(param->interface));
+		param->iface = optarg;
 		break;
 	case OPT_SERVER:
 		param->server = 1;
@@ -72,7 +73,7 @@ static inline int parse_long_options (const struct option *opt, int idx, struct 
 
 int main (int argc, char *argv[]) {
 	int opt, idx;
-	struct param_t param;
+	
 	char buffer[64];
     int i;
 
@@ -97,7 +98,7 @@ int main (int argc, char *argv[]) {
 			return 0;
 
 		case 'i':
-			strncpy(param.interface, optarg, sizeof(param.interface));
+			param.iface = optarg;
 			break;
 		case 's':
 			param.server = 1;
@@ -119,12 +120,13 @@ int main (int argc, char *argv[]) {
     if (optind < argc) {
         for (i = optind; i < argc; i++) {
             printf("argv[%d] =  %s\n", i, argv[i]);
+			param.file = argv[i];
         }
     }
 
 	dump_param(&param);
 
-    pf_packet_packet_all(param.interface);
+    pf_packet_packet_all(&param);
 
 
 
@@ -150,9 +152,11 @@ int version (const char *prog) {
 	return 0;
 }
 
-int dump_param (const struct param_t *param) {
+int dump_param (const struct socket_param_t *param) {
 	debug("Display param value:");
-	info("\tinterface: %s", param->interface);
+	info("\tinterface: %s", param->iface);
 	info("\tserver : %d", param->server);
+	info("\tpacket file: %s", param->file);
+	info("");
 	return 0;
 }
