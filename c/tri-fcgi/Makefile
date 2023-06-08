@@ -8,12 +8,12 @@ all: server
 
 
 %.o: %.c
-	@(ECHO) [CC] $^
+	@$(ECHO) [CC] $^
 	@$(CC) -c $(CFLAGS) $(CFLAGS) $^
 
 server: server.o
-	@(ECHO) [LD] $@
-	@(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+	@$(ECHO) [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 
 clean:
