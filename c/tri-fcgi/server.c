@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include <fcgiapp.h>
-#include <fcgi_stdio.h>
 #include <fcgimisc.h>
 
 static FCGX_Request fcgx_req;
@@ -28,12 +27,12 @@ int main (int argc, char *argv[]) {
         buf = FCGX_GetParam("REMOTE_ADDR", request->envp);
         FCGX_FPrintF(request->out, "remote addr: \"%s\"\n", buf);
 
-        buf = FCGX_GetParam("REQUEST_METHOD", request->envp);
-        printf("request method: \"%s\"\n", buf);
+        // buf = FCGX_GetParam("REQUEST_METHOD", request->envp);
+        // printf("request method: \"%s\"\n", buf);
 
         FCGX_FPrintF(request->out, "Content-Dispostion:attachment; filename=res.txt\r\n");
         FCGX_FPrintF(request->out, "\r\n");
-        FCGX_FPrintF(request->out, "reponse OK\n");
+        FCGX_FPrintF(request->out, "[%s]Response OK\n", buf);
 
         FCGX_Finish_r(&fcgx_req);
     }
