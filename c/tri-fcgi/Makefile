@@ -2,6 +2,7 @@ ECHO := echo
 
 CFLAGS := -g
 
+LIBS := -lfcgi
 
 all: server
 

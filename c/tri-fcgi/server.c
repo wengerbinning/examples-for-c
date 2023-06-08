@@ -8,6 +8,7 @@ static FCGX_Request fcgx_req;
 
 int main (int argc, char *argv[]) {
     char *buf;
+    static FCGX_Request *request = &fcgx_req;
     int sock;
 
     FCGX_Init();
@@ -17,22 +18,22 @@ int main (int argc, char *argv[]) {
         return -1;
     }
 
-    FCGX_InitRequest(&fcgx_req, sock, 0);
+    FCGX_InitRequest(request, sock, 0);
 
     while (1) {
         printf("server running ...\n");
 
-        FCGX_Accept_r(&fcgx_req);
+        FCGX_Accept_r(request);
 
-        buf = get_param("REMOTE_ADDR");
-        printf("remote addr: \"%s\"\n", buf);
+        buf = FCGX_GetParam("REMOTE_ADDR", request->envp);
+        FCGX_FPrintF(request->out, "remote addr: \"%s\"\n", buf);
 
-        buf = get_param("REQUEST_METHOD");
+        buf = FCGX_GetParam("REQUEST_METHOD", request->envp);
         printf("request method: \"%s\"\n", buf);
 
-        pfprint("Content-Dispostion:attachment; filename=res.txt\r\n");
-        pfprint("\r\n");
-        pfprint("reponse OK\n");
+        FCGX_FPrintF(request->out, "Content-Dispostion:attachment; filename=res.txt\r\n");
+        FCGX_FPrintF(request->out, "\r\n");
+        FCGX_FPrintF(request->out, "reponse OK\n");
 
         FCGX_Finish_r(&fcgx_req);
     }
