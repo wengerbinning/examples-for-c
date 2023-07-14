@@ -2,65 +2,52 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "string.h"
 
-typedef void *(*element_hooker) (int idx, char *element, void *priv);
-
-int str_for_element(char *string, unsigned int size, char *segment, void *priv, element_hooker hooker) {
-	void *sptr, *eptr;
-	char buffer[16];
-
-	int idx = 0, len;
-
-	sptr = string;
-	
-	do {
-		while (*(char *)sptr == ' ') 
-			sptr++;
-
-		eptr = strstr(sptr, segment);
-		
-		if (eptr) {
-			len = eptr - sptr;
-		} else {
-			len = size;
-		}	
-	
-		if (len >= sizeof(buffer)) {
-			len = sizeof(buffer) - 1;
-		}
-
-		strncpy(buffer, sptr, len);
-
-		hooker(idx++, buffer, priv);
-
-		if (eptr) {
-			sptr = eptr + 1;
-		}
-
-	} while (sptr && eptr);
-		
-	return idx;
-}
-
-
-void *port_hooker(int idx, char *port, void *priv) {
-	printf("%d %s\n", idx, port);
-}
+/* Iterate over substrings in a string based on delimiters. 
+ *  char sub[] - Save the substring.
+ *  unsigned int len - Save the substring's actual length.
+ *  char *p, *q - The pointers for traversing substrings.
+ *  char *str - The string to br traversed.
+ *  char *sep - The separator for traversing. 
+ */
+/* Warning - sub must not be emoty. */
+#define string_for_by_separator(sub, len, p, q, str, sep)	\
+for (																		   \
+	p = str, q = (p ? strstr(p, sep) : NULL),                                  \
+	memset(sub, 0, sizeof(sub)),											   \
+	len = (q ? (q - p) : (p ? strlen(p): 0)),			     	     		   \
+	len = ((len >= sizeof(sub)) ? (sizeof(sub) - 1) : len),				       \
+	memcpy(sub, p, len)											               \
+	; p;                                                                       \
+	p = (q ? (q + 1) : q), q = (p ? strstr(p, sep) : NULL),			           \
+	memset(sub, 0, sizeof(sub)),							                   \
+	len = (q ? (q - p) : (p ? strlen(p): 0)),   							   \
+	len = ((len >= sizeof(sub)) ? (sizeof(sub) -1) : len),				       \
+	memcpy(sub, p, len)														   \
+)
 
 
 
 int main(int argc, char *argv[]) {
-	char *str = "\"12345678\"abcdefgh\"ABCDEFGHJ\"34243242";
-	char buffer[100];
-	int ret;
+	char *str = "portdewdwedwedsdsad`0, port1,port2,port3,port5,prt2,1234567890abcdee,abcdefghijklmnopqrstuvwxyz,dqwdqwdqwdqwd,qwedqwdqdqwdqwdqdwqwdqwdqwdqwd,dqwdqwdqwdqwdqwdqwdwq";
+	char buffer[16];
+	char *p, *q;
+	int len;
 
-	printf(" escape before string: |%s| \n", str);
+	printf("%p %d, %d\n", str, strlen(str), sizeof(buffer));
+	string_for_by_separator
+	 (buffer, len, p, q, str, ":") {
+		printf("%p %08p\t", p, (q ? q : 0));
+		printf("size %d: |%s|", len, buffer);
+		printf("\n");
+	}
 
-	ret = string_escape(str, '\"', buffer, sizeof(buffer));
-
-	printf(" escape after string: |%s|, found %d \n", buffer, ret);
 
 	return 0;
 
 }
+
+
+
+
+

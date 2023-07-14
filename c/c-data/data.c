@@ -16,6 +16,25 @@ int ip_checksum(void *p) {
    printf("\n %04X\n", 0xFFFF - checksum);
 }
 
+int version(void) {
+	static int version =  0;
+	
+	version++;
+	printf("Version(%p): %d\n", &version, version);
+
+	return 0;
+}
+
+
+int func1(void) {
+	printf("func1\n");
+	version();
+}
+
+int func2(void) {
+	printf("func2\n");
+	version();
+}
 
 
 int main(int agrc, char *argv[]) {
@@ -23,6 +42,10 @@ int main(int agrc, char *argv[]) {
 
     ip_checksum(frame);
 
+	for (int i = 0; i < 10; i++) {
+		func1();
+		func2();
+	}
 
     return 0;
 }
