@@ -1,3 +1,8 @@
+
+
+
+
+
 ## Color
 
 * Color
@@ -88,5 +93,4 @@ tput sgr0
 * \@
 
 
-
-\$ 
+PS1='\e[32m\u\e[31m@\e[33m\h\e[0m \e[34m\W\e[0m \e[31m\$\e[0m \e[m'
