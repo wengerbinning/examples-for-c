@@ -1,0 +1,4 @@
+
+```shell
+npm init
+```
