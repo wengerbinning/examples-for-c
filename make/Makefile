@@ -34,8 +34,14 @@ endef
 
 
 
+$(echo -e '\e[31 mdede')
+$(info ---- Install Kernel Header ----)
+$(echo -e '\e[0m')
+
 
 world:
-	$(call build, work)
+	$(call devel_warning, "test")
+#	$(call build, work)
 
 
+.PHONY: world
