@@ -1,5 +1,6 @@
 # extern TOOLCHAINS
 # extern TOOLCHAIN
+import TOOLCHAINS TOOLCHAIN
 
 TOOLCHAIN_PATH := ${TOOLCHAINS}/${TOOLCHAIN}
 TOOLCHAIN_NAME := $(basename $TOOLCHAIN_PATH)
@@ -10,7 +11,10 @@ CROSS_PREFIX := "aarch64-openwrt-linux-"
 
 TOOLCHAIN_SYS_BIN ?= "${TOOLCHAIN_PATH}/bin"
 TOOLCHAIN_SYS_INC ?= "${TOOLCHAIN_PATH}/include"
-TOOLCHAIN_SYS_LIB ?= "${TOOLCHAIN_PATH}/lib
+TOOLCHAIN_SYS_LIB ?= "${TOOLCHAIN_PATH}/lib"
+
+PATH += ${TOOLCHAIN_SYS_BIN}
+export PATH
 
 BUILD   := "x86_64-pc-linux-gnu"
 HOST    := "x86_64-pc-linux-gnu"
@@ -18,8 +22,9 @@ TARGET  := "aarch64-openwrt-linux-musl"
 SYSROOT := "${TOOLCHAIN_HOME}"
 
 CC  := ${CROSS_PREFIX}gcc
-CXX := $(CROSS_PREFIX)g++
+CXX := ${CROSS_PREFIX}g++
 export CC CXX
+
 AS := ${CROSS_PREFIX}as
 LD := ${CROSS_PREFIX}ld
 AR := ${CROSS_PREFIX}ar
@@ -30,8 +35,11 @@ NM   := ${CROSS_PREFIX}nm
 SIZE := ${CROSS_PREFIX}size
 GDB  := ${CROSS_PREFIX}gdb
 
-CCPFLAGS    +=  
-LDCFLAGS    +=  
+CCPFLAGS    += "" 
+LDCFLAGS    += ""
 
 CFLAGS      += "--sysroot $SYSROOT"
 CXXFLAGS    += ""
+
+
+
