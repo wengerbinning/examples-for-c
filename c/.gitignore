@@ -2,3 +2,9 @@
 **/*.o
 **/*.a
 **/*.so
+
+
+.env
+.variablerc
+
+helloworld
