@@ -41,7 +41,6 @@ dir_check() {
     dirs=$(scan_dir $cwd)
     for dir in $dirs; do
 		git_check $cwd/$dir; ret=$?
-		echo "check $cwd/$dir ret:$ret" >> ~/result
 
 		case $ret in
 		0) repos=${repos:+$repos }$cwd/$dir;;
