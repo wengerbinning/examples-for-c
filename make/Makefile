@@ -1,15 +1,8 @@
-TOPDIR:=${CURDIR}
 
 
-include $(TOPDIR)/include/debug.mk
-include $(TOPDIR)/include/devel.mk
-msg=$(call devel_warning, "demo")
-
-$(info $(msg))
+objects=main1.o foo.o main2.o bar.o
+mains=main1.o main2.o
 
 
-world:
-	$(call devel_warning, "test")
-	$(info demdoe)
-
-.PHONY: world
+all:
+	@echo $(filter-out $(mains),$(objects))
