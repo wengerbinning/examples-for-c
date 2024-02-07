@@ -36,9 +36,9 @@ cd $BUILD_DIR && {
 	$SOURCE_DIR/configure --prefix=/ \
 		--target=$TARGET \
 		--enable-languages=c \
-		--disable-multilib \
+		--enable-shared \
 
-		# --enable-shared \
+		# --disable-multilib \
 
 	#
 	make -j4

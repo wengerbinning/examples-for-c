@@ -15,16 +15,14 @@ PATH="$TOOLCHAIN_DIR/bin${PATH:+:$PATH}"
 export PATH
 
 CC=${CROSS_PREFIX}gcc
+export CC
 
 #
 test -d $BUILD_DIR && rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 
 
-
-
 # =========================================================================== #
-
 notice() {
     local
     echo -ne "\e[32m"
@@ -46,15 +44,13 @@ EOF
 	#
 	notice "Step 0 ...."
 	$SOURCE_DIR/configure --prefix=$DEST_DIR \
+		--host=$TARGET \
 		--target=$TARGET \
 		--with-headers=$TOOLCHAIN_DIR/include \
 		--disable-multilib \
-
-		# --cache-file=config.cache \
-		# --witch-binutils=$TOOLCHAIN_DIR/bin \
-		# --disable-profile \
-		# --enable-add-ons \
-
+		--cache-file=config.cache \
+		--disable-profile \
+		--enable-add-ons \
 
 	#
 	# make install-bootstrap-headers=yes install-headers

@@ -53,10 +53,10 @@ cd $BUILD_DIR && {
 	make install-gcc DESTDIR=${DEST_DIR}
 
 	#
-	make -j4 all-target-gcc
+	make -j4 all-target-libgcc
 
 	#
-	make install-target-gcc DESTDIR=${DEST_DIR}
+	make install-target-libgcc DESTDIR=${DEST_DIR}
 
     #
     cd - >/dev/null
