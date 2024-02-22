@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<!-- Document Head -->
+<head>
+<meta charset="utf-8"/>
+<title>Form</title>
+</head>
+<!-- Document Body -->
+<body>
+<form action="" method="get">
+    <!--  -->
+    <label>Title: </label>
+    <input type="text" id="title" name="title" required/>
+    <!--  -->
+    <label>Version: </label>
+    <select id="version" name="version">
+        <option value="000001">v0.0.0.1</option>
+        <option value="000002">v0.0.0.2</option>
+        <option value="000003">v0.0.0.3</option>
+    </select>
+    <!--  -->
+    <label>Branch: </label>
+    <select id="branch" name="branch">
+        <option value="master">master</option>
+        <option value="stable/1">stable/v1</option>
+        <option value="stable/2">stable/v2</option>
+    </select>
+    <!--  -->
+    <label>Description: </label>
+    <input type="text" id="description" name="description" />
+    <!--  -->
+    <label>Features: </label>
+    <input type="text" id="feature" name="feature" />
+    <!--  -->
+    <label>Issues: </label>
+    <input type="text" id="issue" name="issue" />
+    
+    <!--  -->
+    <input type="submit" value="提交">
+</form>
+</body>
+
+</html>
