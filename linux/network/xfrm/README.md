@@ -236,7 +236,7 @@ xfrm4_policy_check -> xfrm_policy_check -> __xfrm_policy_check
 
 
 
-
+err = x->type->output(x, skb);
 
 
 ##### ESP数据加密
@@ -268,3 +268,30 @@ esp_input_done2 -> skb_set_transport_header
 
 
 validate_xmit_xfrm ->
+
+
+xfrm_state_construct -> xfrm_add_sa
+
+
+
+xfrm_init_state -> __xfrm_init_state
+
+__xfrm_init_state -> x->type->init_state => esp_init_state
+
+esp_init_state -> esp_init_aead -> esp_init_authenc
+
+
+inet_sendmsg -> raw_sendmsg -> ip_push_pending_frames -=>        -> ip_local_out
+
+
+ip_local_out-> xfrm4_output
+
+xfrm4_output -> __xfrm4_output -> xfrm4_output_finish
+xfrm_output -> xfrm_output_resume -> esp_output -> esp_output_tail
+
+
+/dev/sda1 on /mnt/vfat type vfat
+
+ubus send "usb storage partition" '{ "action": true, "device_path": "/dev/sda1", "mount_path": "/mnt/vfat", "label": "vfat", "uuid": "1234", "type": "vfat"}'
+
+ubus send "usb storage partition" '{ "action": false, "device_path": "/dev/sda1", "mount_path": "/mnt/8024B61E24B616DE", "label": "vfat", "uuid": "8024B61E24B616DE", "type": "vfat"}'
