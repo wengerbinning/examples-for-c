@@ -211,6 +211,33 @@ struct sk_buff {
 };
 ```
 
+#### struct iphdr
+
+```c
+struct iphdr {
+#if defined(__LITTLE_ENDIAN_BITFIELD)
+	__u8	    ihl:4,
+		    version:4;
+#elif defined (__BIG_ENDIAN_BITFIELD)
+	__u8	version:4,
+  		        ihl:4;
+#else
+#error	"Please fix <asm/byteorder.h>"
+#endif
+
+	__u8	tos;
+	__be16	tot_len;
+	__be16	id;
+	__be16	frag_off;
+	__u8	ttl;
+	__u8	protocol;
+	__sum16	check;
+	__be32	saddr;
+	__be32	daddr;
+	/*The options start here. */
+};
+```
+
 #### struct tcphdr
 
 ```c
@@ -264,6 +291,8 @@ struct udphdr {
 
 ## Example
 
+
+
 ```c
 if (skb->protocol == htons(ETH_P_IP)) {
     struct iphdr *iph = ip_hdr(skb);
@@ -272,19 +301,20 @@ if (skb->protocol == htons(ETH_P_IP)) {
         case IPPROTO_TCP: {
             struct tcphdr *th = tcp_hdr(skb);
             printk("src ip: %pI4 dst ip: %pI4, TCP,  src port:%u, dst port:%u;",
-            iph->saddr, iph->daddr,
-            ntohs(th->source), ntohs(th->dest));
+                &iph->saddr, &iph->daddr,
+                ntohs(th->source), ntohs(th->dest));
         }
             break;
         case IPPROTO_UDP: {
             struct udphdr *uh = udp_hdr(skb);
             printk("src ip: %pI4 dst ip: %pI4, UDP, src port:%u, dst port:%u;",
-            iph->saddr, iph->daddr,
-            ntohs(uh->source), ntohs(uh->dest));
+                &iph->saddr, &iph->daddr,
+                ntohs(uh->source), ntohs(uh->dest));
         }
             break;
         default:
-            printk("src ip: %pI4 dst ip: %pI4; protocol: %d", iph->saddr, iph->daddr, iph->protocol);
+            printk("src ip: %pI4 dst ip: %pI4, protocol: %d", 
+                &iph->saddr, &iph->daddr, iph->protocol);
     }
 }
 ```
