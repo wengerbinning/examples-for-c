@@ -1,4 +1,5 @@
 
+## Type
 
 #### struct sk_buff
 
@@ -237,6 +238,15 @@ struct iphdr {
 	/*The options start here. */
 };
 ```
+#### struct ethhdr
+
+```c
+struct ethhdr {
+        unsigned char   h_dest[ETH_ALEN];       /* destination eth addr */
+        unsigned char   h_source[ETH_ALEN];     /* source ether addr    */
+        __be16          h_proto;                /* packet type ID field */
+} __attribute__((packed));
+```
 
 #### struct tcphdr
 
@@ -288,6 +298,64 @@ struct udphdr {
 };
 ```
 
+## Interface
+
+#### skb_put
+
+```c
+void *skb_put (struct sk_buff *skb, unsigned int len)
+{
+	void *tmp = skb_tail_pointer(skb);
+	SKB_LINEAR_ASSERT(skb);
+	skb->tail += len;
+	skb->len  += len;
+	if (unlikely(skb->tail > skb->end))
+		skb_over_panic(skb, len, __builtin_return_address(0));
+	return tmp;
+}
+```
+
+#### skb_push
+
+```c
+void *skb_push(struct sk_buff *skb, unsigned int len)
+{
+	skb->data -= len;
+	skb->len  += len;
+	if (unlikely(skb->data < skb->head))
+		skb_under_panic(skb, len, __builtin_return_address(0));
+	return skb->data;
+}
+```
+
+#### skb_pull
+
+```c
+void *skb_pull(struct sk_buff *skb, unsigned int len)
+{
+	return skb_pull_inline(skb, len);
+}
+EXPORT_SYMBOL(skb_pull);
+```
+
+#### skb_network_header
+
+```c
+static inline unsigned char *skb_network_header (const struct sk_buff *skb)
+{
+	return skb->head + skb->network_header;
+}
+```
+
+
+#### skb_network_offset
+
+```c
+static inline int skb_network_offset (const struct sk_buff *skb)
+{
+	return skb_network_header(skb) - skb->data;
+}
+```
 
 ## Example
 
@@ -318,4 +386,3 @@ if (skb->protocol == htons(ETH_P_IP)) {
     }
 }
 ```
-

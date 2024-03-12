@@ -26,6 +26,9 @@
 * flow_offload_hash_cmp
 
 
+* flow_offload_hw_pending_list - struct list_head
+* flow_offload_hw_pending_list_lock
+* struct flow_offload_hw
 
 
 
@@ -61,11 +64,19 @@
 * nf_flow_table_hw_module_init
 * nf_flow_table_hw_module_exit
 
-
 ## callgraph
 
 nf_flow_offload_hw_add -> nf_flow_table_hw_hook->add
 
+flow_offload_hw_add -> flow_offload_hw_prepare
+flow_offload_hw_add -> flow_offload_queue_work
+flow_offload_hw_del -> flow_offload_hw_prepare
+flow_offload_hw_del -> flow_offload_queue_work
+
 flow_offload_hw_prepare -> flow_offload_check_path
 flow_offload_check_path -> dev->netdev_ops->ndo_flow_offload_check
+
+
+flow_offload_hw_work -> do_flow_offload_hw
+
 do_flow_offload_hw -> src_dev->netdev_ops->ndo_flow_offload
