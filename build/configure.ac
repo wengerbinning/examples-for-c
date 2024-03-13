@@ -2,7 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.72])
-AC_INIT(helloworld, 1.0, wengerbinning@gmail.com)
+AC_INIT([helloworld],[1.0],[wengerbinning@gmail.com])
+AM_INIT_AUTOMAKE(1.0)
+
 AC_CONFIG_SRCDIR([helloworld.c])
 AC_CONFIG_HEADERS([config.h])
 
@@ -17,4 +19,5 @@ AC_PROG_CC
 
 # Checks for library functions.
 
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
