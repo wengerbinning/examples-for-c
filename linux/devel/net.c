@@ -3,6 +3,7 @@
 
 #include <linux/string.h>
 
+#include <linux/if_packet.h>
 #include <linux/netdevice.h>
 
 #include <linux/if_bridge.h>
@@ -16,6 +17,7 @@
 #define MODNAME     "Network"
 
 static struct proc_dir_entry * net_root;
+
 
 static int net_init (void)
 {
@@ -52,14 +54,14 @@ static int net_init (void)
             printk("TYPE: 8021Q\n");
         } 
         if (IFF_EBRIDGE && dev->priv_flags) {
-            unsigned short pvid;
+            // unsigned short pvid;
             // struct net_bridge *br;
             printk("TYPE: BIRDGE\n");
 
-            br_vlan_get_pvid(dev, &pvid);
-            // br = netdev_priv(dev);
+            // br_vlan_get_pvid(dev, &pvid);
+            // // br = netdev_priv(dev);
 
-            printk("bridge pvid: %d\n", pvid);
+            // printk("bridge pvid: %d\n", pvid);
 
         }
 
@@ -68,7 +70,7 @@ static int net_init (void)
         }
 
         //
-        printk("DSA DEVICE: %s\n", netdev_uses_dsa(dev) ? "true" : "false");
+        // printk("DSA DEVICE: %s\n", netdev_uses_dsa(dev) ? "true" : "false");
         
         printk("\n");
     }

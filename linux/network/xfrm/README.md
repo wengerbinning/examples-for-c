@@ -239,30 +239,7 @@ xfrm4_policy_check -> xfrm_policy_check -> __xfrm_policy_check
 err = x->type->output(x, skb);
 
 
-##### ESP数据加密
 
-esp_output -> crypto_aead_authsize
-esp_output -> esp_output_tail
-
-esp_output_tail -> crypto_aead_authsize
-esp_output_tail -> crypto_aead_ivsize
-esp_output_tail -> aead_request_set_callback
-esp_output_tail -> aead_request_set_crypt
-esp_output_tail -> esp_output_restore_header
-esp_output_tail -> crypto_aead_encrypt
-
-##### ESP数据解密
-
-esp_input -> esp_input_set_header
-esp_input -> aead_request_set_callback
-esp_input -> aead_request_set_crypt
-esp_input -> crypto_aead_decrypt
-esp_input -> esp_input_done2(skb, err);
-
-esp_input_done2 -> esp_remove_trailer
-esp_input_done2 -> skb_pull_rcsum
-esp_input_done2 -> skb_reset_transport_header
-esp_input_done2 -> skb_set_transport_header
 
 
 
@@ -288,10 +265,3 @@ ip_local_out-> xfrm4_output
 
 xfrm4_output -> __xfrm4_output -> xfrm4_output_finish
 xfrm_output -> xfrm_output_resume -> esp_output -> esp_output_tail
-
-
-/dev/sda1 on /mnt/vfat type vfat
-
-ubus send "usb storage partition" '{ "action": true, "device_path": "/dev/sda1", "mount_path": "/mnt/vfat", "label": "vfat", "uuid": "1234", "type": "vfat"}'
-
-ubus send "usb storage partition" '{ "action": false, "device_path": "/dev/sda1", "mount_path": "/mnt/8024B61E24B616DE", "label": "vfat", "uuid": "8024B61E24B616DE", "type": "vfat"}'

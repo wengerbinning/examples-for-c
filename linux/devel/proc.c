@@ -10,7 +10,8 @@
 
 #define MODNAME "DEVEL PROC"
 
-static struct proc_dir_entry * devel_proc_root;
+static struct proc_dir_entry *devel_proc_root;
+
 
 struct proc_dir_entry *devel_proc_mkdir (const char *name)
 {

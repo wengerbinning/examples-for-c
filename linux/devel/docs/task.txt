@@ -1,0 +1,106 @@
+[14546.899782] [     2] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = kthreadd
+
+[14546.969890] [    10] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,             name = rcu_sched
+[14546.911945] [     3] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = rcu_gp
+[14546.922979] [     4] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = rcu_par_gp
+
+[14546.957465] [     9] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = ksoftirqd/0
+[14547.041294] [    16] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = ksoftirqd/1
+
+[14547.004896] [    13] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = cpuhp/0
+[14547.016970] [    14] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = cpuhp/1
+
+[14546.945913] [     8] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = mm_percpu_wq
+
+[14547.065279] [    19] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = netns
+[14547.076235] [   227] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = oom_reaper
+[14547.088606] [   275] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = writeback
+[14547.099927] [   276] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = kcompactd0
+[14547.112292] [   289] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = pencrypt_serial
+[14547.124124] [   290] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = pdecrypt_serial
+[14547.135942] [   315] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = kblockd
+[14547.147065] [   316] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = blkcg_punt_bio
+[14547.158791] [   326] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = ata_sff
+[14547.181996] [   379] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = kswapd0
+[14547.194071] [   549] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = spi0
+[14547.205887] [   559] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = spi1
+[14547.217701] [   620] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = dm_bufio_cache
+[14547.229428] [   640] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = ipv6_addrconf
+[14547.241067] [   645] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,             name = dsa_ordered
+[14547.264955] [   706] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = ubi_bgt0d
+[14547.277202] [   720] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = ubi_bgt1d
+[14547.289453] [   733] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = ubi_bgt2d
+[14547.313253] [   839] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE,  name = ubifs_bgt2_0
+[14547.444591] [  2435] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_UNINTERRUPTIBLE, name = skb_analysis
+[14547.457275] [  2436] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_UNINTERRUPTIBLE, name = send_ip
+
+[14547.361982] [  1837] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown, name = wq_ring0
+[14547.385782] [  1839] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown, name = wq_ring1
+[14547.409585] [  1841] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown, name = wq_ring2
+[14547.433386] [  1843] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown, name = wq_ring3
+
+[14546.934358] [     6] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,      name = kworker/0:0H
+[14547.301699] [   790] CPU = 0, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,      name = kworker/0:2H
+[14547.053716] [    18] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,      name = kworker/1:0H
+[14547.589736] [  6811] CPU = 1, type = Kernel, prio = 100, nice = -20, policy = SCHED_NORMAL, state = unknown,      name = kworker/1:2H
+[14547.889609] [ 32295] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,            name = kworker/0:0
+[14546.993427] [    12] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,            name = kworker/0:1
+[14547.252532] [   646] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = kworker/0:3
+[14547.877710] [ 28846] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_RUNNING,       name = kworker/1:1
+[14547.901078] [  6112] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,            name = kworker/1:2
+[14547.935656] [ 20202] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,      name = kworker/u4:0
+[14547.866156] [ 15077] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,      name = kworker/u4:1
+[14547.912544] [ 24650] CPU = 1, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,      name = kworker/u4:2
+[14547.924101] [  4500] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,      name = kworker/u4:3
+[14547.947209] [ 27723] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = unknown,      name = kworker/u4:4
+
+[14546.981181] [    11] CPU = 0, type = Kernel, prio =   0, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = migration/0
+[14547.029046] [    15] CPU = 1, type = Kernel, prio =   0, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = migration/1
+[14547.169912] [   356] CPU = 1, type = Kernel, prio =   0, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = watchdogd
+[14547.349387] [  1836] CPU = 0, type = Kernel, prio =  49, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = irq/13-10320000
+[14547.373187] [  1838] CPU = 0, type = Kernel, prio =  49, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = irq/14-10320000
+[14547.396992] [  1840] CPU = 0, type = Kernel, prio =  49, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = irq/15-10320000
+[14547.420790] [  1842] CPU = 0, type = Kernel, prio =  49, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = irq/16-10320000
+[14547.709013] [  7888] CPU = 0, type = Kernel, prio =  96, nice =   0, policy = SCHED_FIFO,   state = TASK_INTERRUPTIBLE, name = silabs_int
+
+[14547.994107] [  2090] CPU = 0, type = Kernel, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_RUNNING, name = devel_kthread
+
+
+
+[14546.887880] [     1] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = procd
+[14547.325763] [  1233] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = ubusd
+[14547.337661] [  1358] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = ash
+[14547.469522] [  3607] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = cfmanager
+[14547.481768] [  4387] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_RUNNING,       name = logd
+[14547.493059] [  4388] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = logread
+[14547.505136] [  4421] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = rpcd
+[14547.516948] [  5966] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = netifd
+[14547.528933] [  5987] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = odhcpd
+[14547.540919] [  6077] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = dropbear
+[14547.553079] [  6116] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = provision_serve
+[14547.565848] [  6588] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = dnsmasq
+[14547.577921] [  6786] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = nbrd
+[14547.601287] [  7044] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = nginx
+[14547.613191] [  7135] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = gspcap
+[14547.625180] [  7220] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = fiofcgi
+[14547.637254] [  7354] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = controller
+[14547.649590] [  7415] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = nginx
+[14547.661490] [  7416] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = nginx
+[14547.673397] [  7417] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = nginx
+[14547.685297] [  7467] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = exe
+[14547.697024] [  7821] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = udhcpc
+[14547.721176] [  7961] CPU = 1, type =   User, prio = 105, nice = -15, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = ntpd
+[14547.732990] [  8082] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = monitor.sh
+[14547.745325] [  8880] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = gsxdp
+[14547.757226] [  8997] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = mwan3rtmon
+[14547.769562] [  8998] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = mwan3rtmon
+[14547.781898] [  9043] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = ip
+[14547.793536] [  9044] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = mwan3rtmon
+[14547.805871] [  9046] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = ip
+[14547.817514] [  9047] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = mwan3rtmon
+[14547.829847] [ 10156] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = sg
+[14547.841489] [ 10183] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = ubus_notificati
+[14547.854257] [  8179] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = crond
+[14547.958765] [  1814] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = sleep
+[14547.970666] [  2054] CPU = 1, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_RUNNING,       name = insmod
+[14547.982130] [  2089] CPU = 0, type =   User, prio = 120, nice =   0, policy = SCHED_NORMAL, state = TASK_INTERRUPTIBLE, name = sleep

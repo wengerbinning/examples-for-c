@@ -1,4 +1,17 @@
 
+#### struct sk_buff_head
+
+```C
+struct sk_buff_head {
+	/* These two members must be first. */
+	struct sk_buff	*next;
+	struct sk_buff	*prev;
+
+	__u32		qlen;
+	spinlock_t	lock;
+};
+```
+
 #### struct sk_buff
 
 ```c
