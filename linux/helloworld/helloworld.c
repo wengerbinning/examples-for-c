@@ -1,6 +1,8 @@
 #include <linux/init.h>
 #include <linux/module.h>
 
+#include "version.h"
+
 static int helloworld_init(void)
 {
 	printk(KERN_ALERT "load hello world kernel module\n");
