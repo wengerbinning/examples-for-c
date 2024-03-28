@@ -1,7 +1,8 @@
-ccflags-y := -Iinclude
 
-# ccflags-y := -std=c89 
+##
+ccflags-y := -I$(src)/include
 
+##
 obj-m += develproc.o
 obj-m += develnet.o
 obj-m += develskb.o
@@ -12,8 +13,9 @@ obj-m += develtime.o
 
 ## module ##
 
-#
+# develtime
 develtime-objs += time.o
+
 # develproc
 develproc-objs += proc.o
 

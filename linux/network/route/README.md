@@ -115,6 +115,43 @@ struct rtable {
 
 ## Call Graph
 
+
+#### 本机路由
+
+ipv4_sk_update_pmtu -> ip_route_output_flow
+ip_route_connect -> ip_route_output_flow
+
+ip_route_output_flow -> __ip_route_output_key
+ip_route_output_flow -> xfrm_lookup_route
+
+xfrm_lookup_route -> __ip_route_output_key
+xfrm_lookup_route -> xfrm_lookup_route
+
+
+#### 转发路由
+
+ip_forward -> skb_warn_if_lro
+ip_forward -> xfrm4_policy_check
+ip_forward -> skb_forward_csum
+ip_forward -> xfrm4_route_forward
+ip_forward -> NF_HOOK(NFPROTO_IPV4,NF_INET_FORWARD,ip_forward_finish)
+
+ip_forward_finish -> dst_output
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ip_route_input_noref -> ip_route_input_common
 
 * ip_route_input_common -> ip_route_input_slow

@@ -238,6 +238,11 @@ enum ip_conntrack_status {
 ## Call Graph
 
 
+__ip_local_out
 
 
+#### 接收数据
 
+
+__netif_receive_skb_one_core -> __netif_receive_skb_core
+__netif_receive_skb_one_core -> pt_prev->func:ipv6_rcv,ip_rcv

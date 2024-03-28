@@ -1,0 +1,32 @@
+name         : hmac(sha224)
+driver       : safexcel-hmac-sha224
+module       : crypto_safexcel
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 28
+
+name         : hmac(sha224)
+driver       : safexcel-hmac-sha224
+module       : crypto_safexcel
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 28
+
+name         : compress_null
+driver       : compress_null-generic
+module       : kernel
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : compression

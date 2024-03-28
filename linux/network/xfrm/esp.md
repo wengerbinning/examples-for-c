@@ -25,7 +25,7 @@ esp_input_done2 -> skb_pull_rcsum
 esp_input_done2 -> skb_reset_transport_header
 esp_input_done2 -> skb_set_transport_header
 
-
+esp_input_done -> xfrm_input_resume
 
 ## Symbol Table
 

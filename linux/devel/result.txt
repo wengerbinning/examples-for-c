@@ -1,0 +1,95 @@
+aead cipher
+ - 02 name:echainiv(authenc(hmac(sha1),cbc(aes)))  module:kernel          driver:echainiv(safexcel-authenc-hmac-sha1-cbc-aes) priority:300 
+ - 03 name:rfc4309(ccm(aes))                       module:crypto_safexcel driver:safexcel-rfc4309-ccm-aes                     priority:300 
+ - 04 name:rfc4543(gcm(aes))                       module:kernel          driver:safexcel-rfc4543-gcm-aes                     priority:300 
+ - 05 name:rfc4106(gcm(aes))                       module:kernel          driver:safexcel-rfc4106-gcm-aes                     priority:300 
+ - 06 name:authenc(hmac(sha384),cbc(des))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha384-cbc-des         priority:300 
+ - 07 name:authenc(hmac(sha512),cbc(des))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha512-cbc-des         priority:300 
+ - 08 name:authenc(hmac(sha224),cbc(des))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha224-cbc-des         priority:300 
+ - 09 name:authenc(hmac(sha256),cbc(des))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha256-cbc-des         priority:300 
+ - 10 name:authenc(hmac(sha384),cbc(des3_ede))     module:crypto_safexcel driver:safexcel-authenc-hmac-sha384-cbc-des3_ede    priority:300 
+ - 11 name:authenc(hmac(sha512),cbc(des3_ede))     module:crypto_safexcel driver:safexcel-authenc-hmac-sha512-cbc-des3_ede    priority:300 
+ - 12 name:authenc(hmac(sha224),cbc(des3_ede))     module:crypto_safexcel driver:safexcel-authenc-hmac-sha224-cbc-des3_ede    priority:300 
+ - 13 name:authenc(hmac(sha256),cbc(des3_ede))     module:crypto_safexcel driver:safexcel-authenc-hmac-sha256-cbc-des3_ede    priority:300 
+ - 14 name:authenc(hmac(sha1),cbc(des))            module:crypto_safexcel driver:safexcel-authenc-hmac-sha1-cbc-des           priority:300 
+ - 19 name:ccm(aes)                                module:crypto_safexcel driver:safexcel-ccm-aes                             priority:300 
+ - 20 name:gcm(aes)                                module:crypto_safexcel driver:safexcel-gcm-aes                             priority:300 
+ - 21 name:authenc(hmac(sha512),rfc3686(ctr(aes))) module:crypto_safexcel driver:safexcel-authenc-hmac-sha512-ctr-aes         priority:300 
+ - 22 name:authenc(hmac(sha384),rfc3686(ctr(aes))) module:crypto_safexcel driver:safexcel-authenc-hmac-sha384-ctr-aes         priority:300 
+ - 23 name:authenc(hmac(sha256),rfc3686(ctr(aes))) module:crypto_safexcel driver:safexcel-authenc-hmac-sha256-ctr-aes         priority:300 
+ - 24 name:authenc(hmac(sha224),rfc3686(ctr(aes))) module:crypto_safexcel driver:safexcel-authenc-hmac-sha224-ctr-aes         priority:300 
+ - 25 name:authenc(hmac(sha1),rfc3686(ctr(aes)))   module:crypto_safexcel driver:safexcel-authenc-hmac-sha1-ctr-aes           priority:300 
+ - 26 name:authenc(hmac(sha1),cbc(des3_ede))       module:crypto_safexcel driver:safexcel-authenc-hmac-sha1-cbc-des3_ede      priority:300 
+ - 27 name:authenc(hmac(sha512),cbc(aes))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha512-cbc-aes         priority:300 
+ - 28 name:authenc(hmac(sha384),cbc(aes))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha384-cbc-aes         priority:300 
+ - 29 name:authenc(hmac(sha256),cbc(aes))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha256-cbc-aes         priority:300 
+ - 30 name:authenc(hmac(sha224),cbc(aes))          module:crypto_safexcel driver:safexcel-authenc-hmac-sha224-cbc-aes         priority:300 
+ - 31 name:authenc(hmac(sha1),cbc(aes))            module:crypto_safexcel driver:safexcel-authenc-hmac-sha1-cbc-aes           priority:300 
+ahash cipher
+ - 15 name:cmac(aes)                               module:crypto_safexcel driver:safexcel-cmac-aes                            priority:300 
+ - 16 name:xcbc(aes)                               module:crypto_safexcel driver:safexcel-xcbc-aes                            priority:300 
+ - 17 name:cbcmac(aes)                             module:crypto_safexcel driver:safexcel-cbcmac-aes                          priority:300 
+ - 18 name:crc32                                   module:crypto_safexcel driver:safexcel-crc32                               priority:300 
+ - 32 name:hmac(sha512)                            module:crypto_safexcel driver:safexcel-hmac-sha512                         priority:300 
+ - 33 name:hmac(sha384)                            module:crypto_safexcel driver:safexcel-hmac-sha384                         priority:300 
+ - 34 name:hmac(sha256)                            module:crypto_safexcel driver:safexcel-hmac-sha256                         priority:300 
+ - 35 name:hmac(sha224)                            module:crypto_safexcel driver:safexcel-hmac-sha224                         priority:300 
+ - 36 name:hmac(sha1)                              module:crypto_safexcel driver:safexcel-hmac-sha1                           priority:300 
+ - 37 name:hmac(md5)                               module:crypto_safexcel driver:safexcel-hmac-md5                            priority:300 
+ - 38 name:sha512                                  module:crypto_safexcel driver:safexcel-sha512                              priority:300 
+ - 39 name:sha384                                  module:crypto_safexcel driver:safexcel-sha384                              priority:300 
+ - 40 name:sha256                                  module:crypto_safexcel driver:safexcel-sha256                              priority:300 
+ - 41 name:sha224                                  module:crypto_safexcel driver:safexcel-sha224                              priority:300 
+ - 42 name:sha1                                    module:crypto_safexcel driver:safexcel-sha1                                priority:300 
+ - 43 name:md5                                     module:crypto_safexcel driver:safexcel-md5                                 priority:300 
+cipher cipher
+ - 73 name:aes                                     module:kernel          driver:aes-generic                                  priority:100 
+ - 74 name:des3_ede                                module:kernel          driver:des3_ede-generic                             priority:100 
+ - 75 name:des                                     module:kernel          driver:des-generic                                  priority:100 
+ - 86 name:cipher_null                             module:kernel          driver:cipher_null-generic                          priority:  0 
+compression cipher
+ - 66 name:lzo-rle                                 module:kernel          driver:lzo-rle-generic                              priority:  0 
+ - 68 name:lzo                                     module:kernel          driver:lzo-generic                                  priority:  0 
+ - 71 name:deflate                                 module:kernel          driver:deflate-generic                              priority:  0 
+ - 85 name:compress_null                           module:kernel          driver:compress_null-generic                        priority:  0 
+kpp cipher
+ - 55 name:ecdh                                    module:kernel          driver:ecdh-generic                                 priority:100 
+rng cipher
+ - 54 name:jitterentropy_rng                       module:kernel          driver:jitterentropy_rng                            priority:100 
+ - 57 name:stdrng                                  module:kernel          driver:drbg_nopr_hmac_sha256                        priority:207 
+ - 58 name:stdrng                                  module:kernel          driver:drbg_nopr_hmac_sha512                        priority:206 
+ - 59 name:stdrng                                  module:kernel          driver:drbg_nopr_hmac_sha384                        priority:205 
+ - 60 name:stdrng                                  module:kernel          driver:drbg_nopr_hmac_sha1                          priority:204 
+ - 61 name:stdrng                                  module:kernel          driver:drbg_pr_hmac_sha256                          priority:203 
+ - 62 name:stdrng                                  module:kernel          driver:drbg_pr_hmac_sha512                          priority:202 
+ - 63 name:stdrng                                  module:kernel          driver:drbg_pr_hmac_sha384                          priority:201 
+ - 64 name:stdrng                                  module:kernel          driver:drbg_pr_hmac_sha1                            priority:200 
+scomp cipher
+ - 65 name:lzo-rle                                 module:kernel          driver:lzo-rle-scomp                                priority:  0 
+ - 67 name:lzo                                     module:kernel          driver:lzo-scomp                                    priority:  0 
+ - 69 name:zlib-deflate                            module:kernel          driver:zlib-deflate-scomp                           priority:  0 
+ - 70 name:deflate                                 module:kernel          driver:deflate-scomp                                priority:  0 
+shash cipher
+ - 01 name:hmac(sha256)                            module:kernel          driver:hmac(sha256-generic)                         priority:100 
+ - 53 name:crc32c                                  module:crc32c_generic  driver:crc32c-generic                               priority:100 
+ - 56 name:ghash                                   module:kernel          driver:ghash-generic                                priority:100 
+ - 76 name:sha384                                  module:kernel          driver:sha384-generic                               priority:100 
+ - 77 name:sha512                                  module:kernel          driver:sha512-generic                               priority:100 
+ - 78 name:sha224                                  module:kernel          driver:sha224-generic                               priority:100 
+ - 79 name:sha256                                  module:kernel          driver:sha256-generic                               priority:100 
+ - 80 name:sha1                                    module:kernel          driver:sha1-generic                                 priority:100 
+ - 81 name:md5                                     module:kernel          driver:md5-generic                                  priority:  0 
+ - 82 name:md4                                     module:kernel          driver:md4-generic                                  priority:  0 
+ - 84 name:digest_null                             module:kernel          driver:digest_null-generic                          priority:  0 
+skcipher cipher
+ - 44 name:rfc3686(ctr(aes))                       module:crypto_safexcel driver:safexcel-ctr-aes                             priority:300 
+ - 45 name:ofb(aes)                                module:crypto_safexcel driver:safexcel-ofb-aes                             priority:300 
+ - 46 name:cfb(aes)                                module:crypto_safexcel driver:safexcel-cfb-aes                             priority:300 
+ - 47 name:cbc(aes)                                module:crypto_safexcel driver:safexcel-cbc-aes                             priority:300 
+ - 48 name:ecb(aes)                                module:crypto_safexcel driver:safexcel-ecb-aes                             priority:300 
+ - 49 name:cbc(des3_ede)                           module:crypto_safexcel driver:safexcel-cbc-des3_ede                        priority:300 
+ - 50 name:ecb(des3_ede)                           module:crypto_safexcel driver:safexcel-ecb-des3_ede                        priority:300 
+ - 51 name:cbc(des)                                module:crypto_safexcel driver:safexcel-cbc-des                             priority:300 
+ - 52 name:ecb(des)                                module:crypto_safexcel driver:safexcel-ecb-des                             priority:300 
+ - 72 name:ecb(arc4)                               module:kernel          driver:ecb(arc4)-generic                            priority:100 
+ - 83 name:ecb(cipher_null)                        module:kernel          driver:ecb-cipher_null                              priority:100

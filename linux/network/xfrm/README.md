@@ -141,6 +141,11 @@ esp4_err
 xfrm_lookup -> xfrm_lookup_with_ifid
 xfrm_lookup_with_ifid -> xfrm_resolve_and_create_bundle
 
+
+#### check
+
+xfrm4_policy_check -> xfrm_policy_check -> __xfrm_policy_check
+
 #### 发送数据
 
 `ip_route_output_flow` 进入 `xfrm_lookup_route`
@@ -232,17 +237,36 @@ xfrm4_policy_check -> xfrm_policy_check -> __xfrm_policy_check
 
 #### 接收数据
 
-* xfrm4_rcv -> xfrm4_rcv_spi -> xfrm_input
+
+tunnel4_rcv -> xfrm_tunnel_rcv -> xfrm4_rcv_spi -> xfrm_input
+
+xfrm4_rcv -> xfrm4_rcv_spi -> xfrm_input
+
+xfrm_input -> x->type_offload->input_tail
+xfrm_input -> x->type->input:esp_input
+xfrm_input -> xfrm_rcv_cb
+xfrm_input -> finfo->transport_finish:xfrm4_transport_finish
+
+
+xfrm_rcv_cb -> afinfo->callback:xfrm4_rcv_cb
+xfrm4_rcv_cb -> handler->cb_handler:xfrmi_rcv_cb
+
+
+xfrm4_transport_finish -> ip_send_check
+xfrm4_transport_finish -> skb_mac_header_rebuild
+xfrm4_transport_finish -> skb_reset_transport_header
+xfrm4_transport_finish -> NF_HOOK(NFPROTO_IPV4,NF_INET_PRE_ROUTING,xfrm4_rcv_encap_finish)
+
+
+
+xfrmi_rcv_cb
+esp_input -> 
+
+* 
 
 
 
 err = x->type->output(x, skb);
-
-
-
-
-
-
 
 validate_xmit_xfrm ->
 
@@ -260,8 +284,27 @@ esp_init_state -> esp_init_aead -> esp_init_authenc
 
 inet_sendmsg -> raw_sendmsg -> ip_push_pending_frames -=>        -> ip_local_out
 
+## Call Graph
+
+
+
+
+
+#### 发送数据
 
 ip_local_out-> xfrm4_output
 
-xfrm4_output -> __xfrm4_output -> xfrm4_output_finish
-xfrm_output -> xfrm_output_resume -> esp_output -> esp_output_tail
+xfrm4_output -> NF_HOOK_COND(NFPROTO_IPV4,NF_INET_POST_ROUTING,__xfrm4_output)
+
+__xfrm4_output -> afinfo->output_finish:xfrm4_output_finish
+
+xfrm4_output_finish -> xfrm_output
+
+xfrm_output -> xfrm_output_resume 
+
+xfrm_output_resume -> xfrm_output_one
+xfrm_output_resume -> dst_output:esp_output
+xfrm_output_resume -> nf_hook(family,NF_INET_POST_ROUTING)
+
+
+#### 接收数据

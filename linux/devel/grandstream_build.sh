@@ -10,8 +10,13 @@ export TOPDIR=`pwd`
 export SUBDIRS=$TOPDIR
 
 
-make ARCH=$ARCH CROSS_COMPILE=${CROSS_PREFIX} \
+make V=s ARCH=$ARCH CROSS_COMPILE=${CROSS_PREFIX} \
     -C $KERNEL_PATH M=$MODULE_PATH modules
 
 
 cp -v devel*.ko /srv/tftp
+
+
+####
+
+make clean
