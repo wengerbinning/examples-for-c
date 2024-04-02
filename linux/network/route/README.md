@@ -115,6 +115,13 @@ struct rtable {
 
 ## Call Graph
 
+fib_validate_source -> __fib_validate_source
+
+fib_lookup -> fib_table_lookup -> 
+
+ip_route_input_noref -> ip_route_input_rcu
+ip_route_input_rcu -> ip_route_input_slow
+
 
 #### 本机路由
 

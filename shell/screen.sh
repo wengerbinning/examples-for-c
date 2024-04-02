@@ -19,7 +19,7 @@ echo "==== Font Color ===="
 echo -e "\e[30;47m black   \e[0m" # 黑色
 echo -e "\e[31m red        \e[0m" # 红色
 echo -e "\e[32m green      \e[0m" # 绿色
-echo -e "\e[33m yellow     \e[0m" # 黄色
+echo -e "\e[33m              \e[0m" # 黄色
 echo -e "\e[34m blue       \e[0m" # 蓝色
 echo -e "\e[35m violet     \e[0m" # 紫色
 echo -e "\e[36m atrovirens \e[0m" # 墨绿
