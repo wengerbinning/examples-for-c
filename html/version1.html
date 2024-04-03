@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Version Commit</title>
+
+	<link rel="stylesheet" type="text/css" href="css/page.css"/>
+	<link rel="stylesheet" type="text/css" href="css/version1.css"/>
+</head>
+<body>
+	<div id="page">
+	<div id="div_form">
+		<!--  -->
+		<form action="" method="get">
+			<div id="div_title">
+				<label id="lab_title">Title: </label>
+				<input type="text" id="title" name="title" required/>
+			</div>
+
+			<div id="div_version">
+				<label id="lab_version">Version: </label>
+				<select id="version" name="version">
+					<option value="000001">v0.0.0.1</option>
+					<option value="000002">v0.0.0.2</option>
+					<option value="000003">v0.0.0.3</option>
+				</select>
+			</div>
+
+			<div id="div_branch">
+				<label id="lab_branch">Branch: </label>
+				<select id="branch" name="branch">
+					<option value="master">master</option>
+					<option value="stable/1">stable/v1</option>
+					<option value="stable/2">stable/v2</option>
+				</select>
+			</div>
+
+			<div id="div_tag">
+				<label id="lab_tag">Tags:</label>
+				<input type="text" id="tags" name="tags" />
+			</div>
+
+			<div id="div_description">
+				<label>Description: </label>
+				<input type="text" id="description" name="description" />
+			</div>
+
+			<div id="div_features">
+				<label>Features: </label>
+				<input type="text" id="feature" name="feature" />
+			</div>
+
+			<div id="div_issues">
+				<label>Issues: </label>
+				<input type="text" id="issue" name="issue" />
+			</div>
+
+			<div>
+				<input type="submit" value="提交">
+			</div>
+		</form>
+		<!--  -->
+	</div>
+	</div>
+</body>
+</html>
