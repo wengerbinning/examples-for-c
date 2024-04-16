@@ -1,0 +1,40 @@
+# Detect multiple imported environments
+test -n "$TOOLCHAIN_PATH" && { echo -e "\e[33mYou have imported '$TOOLCHAIN_NAME'!\e[0m"; return; }
+
+# 
+TOOLCHAIN_HOME=/mnt/work/grandstream/toolchains
+TOOLCHAIN_NAME=OpenWrt-Toolchain-mtk7981-for-aarch64_cortex-a53_gcc-8.4.0
+
+# 
+TOOLCHAIN_REVERSION="toolchain-aarch64_cortex-a53_gcc-8.4.0_musl"
+TOOLCHAIN_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}/${TOOLCHAIN_REVERSION}"
+TOOLCHAIN_BIN="${TOOLCHAIN_PATH}/bin"
+TOOLCHIAN_INCLUDE="${TOOLCHAIN_PATH}/include"
+TOOLCHIAN_LIB="${TOOLCHAIN_PATH}/lib"
+TOOLCHAIN_HOST_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}/host"
+PATH="${TOOLCHAIN_BIN}:${PATH}"
+export PATH
+
+# 
+ARCH="aarch64"
+CROSS_PREFIX="aarch64-openwrt-linux-musl-"
+CROSS_COMPILE="aarch64-openwrt-linux-musl-"
+CC="${CROSS_PREFIX}gcc"
+LD="${CROSS_PREFIX}ld"
+AR="${CROSS_PREFIX}ar"
+STRIP="${CROSS_PREFIX}strip"
+export CC LD AR STRIP
+CXX="${CROSS_PREFIX}g++"
+LD_LIBRARY_PATH="${TOOLCHAIN_HOST_PATH}/usr/lib64"
+export LD_LIBRARY_PATH
+PKG_CONFIG_PATH=
+PKG_CONFIG_SYSROOT_DIR=
+
+# OpenWrt
+STAGING_DIR=${TOOLCHAIN_PATH}
+export STAGING_DIR
+
+
+# Setting Terminal
+TOOLCHAIN_PS1_PREFIX=toolchain
+PS1="($TOOLCHAIN_PS1_PREFIX) $PS1"

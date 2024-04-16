@@ -1,6 +1,9 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
+#include <stddef.h>
+#include <stdbool.h>
+
 /* -------------------------------------------------------------------------- */
 
 #define container_of(ptr, type, member) \
@@ -15,7 +18,6 @@ struct list_head {
 	struct list_head *next;
 	struct list_head *prev;
 };
-
 
 #define LIST_HEAD_INIT(name)    { &(name), &(name) }
 #define LIST_HEAD(name)	        struct list_head name = LIST_HEAD_INIT(name)
@@ -103,7 +105,7 @@ list_move_tail (struct list_head *entry, struct list_head *head)
 }
 
 static inline void
-list_splice const struct list_head *list, struct list_head *head)
+list_splice (const struct list_head *list, struct list_head *head)
 {
 	_list_splice(list, head, head->next);
 }
@@ -146,11 +148,23 @@ static inline void list_del_init (struct list_head *entry)
 #define	list_first_entry(ptr, type, field)	list_entry((ptr)->next, type, field)
 #define	list_last_entry(ptr, type, field)	list_entry((ptr)->prev, type, field)
 
+/* */
+
 #define	list_for_each(p, head) \
 	for (p = (head)->next; p != (head); p = p->next)
 
 #define	list_for_each_safe(p, n, head) \
 	for (p = (head)->next, n = p->next; p != (head); p = n, n = p->next)
+
+#define	list_for_each_prev(p, head) \
+	for (p = (head)->prev; p != (head); p = p->prev)
+
+#define	list_for_each_prev_safe(p, n, head) \
+	for (p = (head)->prev, n = p->prev; p != (head); p = n, n = p->prev)
+
+/* EOF */
+
+/* */
 
 #define list_for_each_entry(p, h, field) \
 	for (p = list_first_entry(h, typeof(*p), field);        \
@@ -168,10 +182,6 @@ static inline void list_del_init (struct list_head *entry)
         &p->field != (h);                                       \
 	    p = list_entry(p->field.prev, typeof(*p), field))
 
-#define	list_for_each_prev(p, h) \
-    for (p = (h)->prev; p != (h); p = p->prev)
-
-#define	list_for_each_prev_safe(p, n, h) \
-    for (p = (h)->prev, n = p->prev; p != (h); p = n, n = p->prev)
+/* EOF */
 
 #endif /* __LIST_H__ */
