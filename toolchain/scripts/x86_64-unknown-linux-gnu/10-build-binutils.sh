@@ -2,7 +2,7 @@
 
 ##
 TOOLCHAIN_HOME="/mnt/work/toolchains"
-TOOLCHAIN_NAME="x86_64-unknown-linux-gnu"
+TOOLCHAIN_NAME="toolchain-x86_64-unknown-linux-gnu"
 TOOLCHAIN_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}"
 #
 ARCH=x86_64
@@ -25,7 +25,7 @@ cd $BUILD_RPATH && {
 ###################
 
 #
-$SOURCE_PATH/configure --target=$TARGET --prefix=/
+$SOURCE_PATH/configure --host=$TARGET --target=$TARGET --prefix=/ \
 	--disable-multib
 
 #

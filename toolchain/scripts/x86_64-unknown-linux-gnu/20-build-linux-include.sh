@@ -1,27 +1,23 @@
 #!/usr/bin/env bash
 
-TOOLCHAIN_DIR="/mnt/work/wenger00/toolchain"
+##
+TOOLCHAIN_HOME="/mnt/work/toolchains"
+TOOLCHAIN_NAME="toolchain-x86_64-unknown-linux-gnu"
+TOOLCHAIN_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}"
+#
+ARCH=x86_64
+TARGET="x86_64-unknown-linux-gnu"
+#
+CROSS_PREFIX="x86_64-unknown-linux-gnu-"
+#
+BUILD_RPATH="build"
+SOURCE_PATH=$(pwd -P)
+DEST_APATH="$SOURCE_PATH/destdir"
+#
+INSTALL_HDR_PATH=$DEST_APATH
 
-TARGET="aarch64-unknown-linux"
-CROSS_PREFIX="aarch64-unknown-linux-"
-ARCH=arm64
+##
+test -d $DEST_APATH && rm -rf $DEST_APATH
 
-SOURCE_DIR=$(pwd)
-DEST_DIR="$TOOLCHAIN_DIR"
-
-
-INSTALL_HDR_PATH=$TOOLCHAIN_DIR
-
-# =========================================================================== #
-
-notice() {
-    local
-    echo -ne "\e[32m"
-    echo -ne "$@"
-    echo -ne "\e[0m"
-    echo -ne "\n"
-}
-
-# =========================================================================== #
-
+##
 make ARCH=$ARCH headers_install INSTALL_HDR_PATH=$INSTALL_HDR_PATH

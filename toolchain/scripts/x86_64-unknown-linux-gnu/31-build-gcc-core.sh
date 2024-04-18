@@ -33,7 +33,9 @@ $SOURCE_PATH/configure --prefix=/ \
 	--enable-languages=c,c++ \
 	--disable-multilib \
 	--disable-threads \
-	--with-sysroot=/usr/include \
+
+
+	# --with-sysroot=/ \
 
 	# --disable-shared \
 	# --disable-nls \
