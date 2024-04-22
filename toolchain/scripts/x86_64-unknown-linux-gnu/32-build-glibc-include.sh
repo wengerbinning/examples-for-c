@@ -20,12 +20,12 @@ CFLAGS="-O3 -g -Wno-attributes"
 export PATH CC CFLAGS
 
 ##
-test -d $BUILD_PATH && rm -rf $BUILD_PATH
-mkdir -p $BUILD_PATH
+test -d $BUILD_RPATH && rm -rf $BUILD_RPATH
+mkdir -p $BUILD_RPATH
 #
 test -d $DEST_APATH && rm -rf $DEST_APATH
 
-cd $BUILD_PATH && {
+cd $BUILD_RPATH && {
 ###################
 
 #

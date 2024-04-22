@@ -34,8 +34,9 @@ $SOURCE_PATH/configure --prefix=/ \
 	--disable-multilib \
 	--disable-threads \
 
+	--with-sysroot=
 
-	# --with-sysroot=/ \
+	# --with-sysroot=${TOOLCHAIN_DIR} \
 
 	# --disable-shared \
 	# --disable-nls \
@@ -47,7 +48,7 @@ $SOURCE_PATH/configure --prefix=/ \
 	# --disable-libmudflap \
 	# --disable-libgomp \
 
-	# --with-sysroot=${TOOLCHAIN_DIR} \
+
 
 #
 make -j4 all-gcc
