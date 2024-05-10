@@ -19,15 +19,19 @@ CC=${CROSS_PREFIX}gcc
 CFLAGS="-O3 -g -Wno-attributes"
 export PATH CC
 
-#
+##
+test -d $DEST_APATH && rm -rf $DEST_APATH
+
+##
 cd $BUILD_RPATH && {
 ###################
 
 #
-make -j4
+make -j6
 
 #
 make install DESTDIR=$DEST_APATH
+
 
 ###################
 	cd - >/dev/null

@@ -28,33 +28,29 @@ cd $BUILD_RPATH && {
 ###################
 
 #
-$SOURCE_PATH/configure --prefix=/ \
+$SOURCE_PATH/configure --prefix='' \
 	--target=$TARGET \
 	--enable-languages=c,c++ \
 	--disable-multilib \
 	--disable-threads \
+	--disable-nls \
+	--disable-libssp \
+	--disable-libgomp \
+	--disable-libatomic \
+	--disable-libmudflap \
+	--disable-libquadmath \
+	--disable-decimal-float \
+	--with-sysroot=/ \
+	--with-build-sysroot=$TOOLCHAIN_PATH \
 
-	--with-sysroot=
-
-	# --with-sysroot=${TOOLCHAIN_DIR} \
-
+	##
 	# --disable-shared \
-	# --disable-nls \
-
-	# --disable-libssp \
-	# --disable-decimal-float \
-	# --disable-libatomic \
-	# --disable-libquadmath \
-	# --disable-libmudflap \
-	# --disable-libgomp \
-
-
 
 #
-make -j4 all-gcc
+make -j6 all-gcc
 
 #
-make install-gcc DESTDIR=${DEST_APATH}
+make install-gcc  DESTDIR=$DEST_APATH
 
 ###################
 	cd - >/dev/null

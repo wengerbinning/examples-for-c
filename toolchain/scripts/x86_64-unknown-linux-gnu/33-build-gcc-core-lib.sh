@@ -24,11 +24,11 @@ test -d $DEST_APATH && rm -rf $DEST_APATH
 cd $BUILD_RPATH && {
 ###################
 
-#
-make -j4 all-target-libgcc
+# all-target-libstdc++-v3
+make -j6 all-target-libgcc
 
-#
-make install-target-libgcc DESTDIR=${DEST_APATH}
+# install-target-libstdc++-v3
+make install-target-libgcc  DESTDIR=${DEST_APATH}
 
 ###################
 	cd - >/dev/null
