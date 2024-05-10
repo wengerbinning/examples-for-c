@@ -1,0 +1,14 @@
+
+Run
+---
+
+go run helloworld.go
+
+
+Build
+-----
+
+go mod init helloworld
+
+go build
+# go build -o bin/helloworld
