@@ -7,32 +7,32 @@ TOOLCHAIN_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}"
 #
 ARCH=x86_64
 TARGET="x86_64-unknown-linux-gnu"
-#
 CROSS_PREFIX="x86_64-unknown-linux-gnu-"
-#
-BUILD_RPATH="build"
-SOURCE_PATH=$(pwd -P)
-DEST_APATH="$SOURCE_PATH/destdir"
 
 ##
-test -d $BUILD_RPATH && rm -rf $BUILD_RPATH
-mkdir -p $BUILD_RPATH
-#
-test -d $DEST_APATH && rm -rf $DEST_APATH
+BUILD_PATH=".build"
+SRC_APATH=$PWD
+DST_APATH=${PWD}/destdir
 
 ##
-cd $BUILD_RPATH && {
+test -d  "$DST_APATH" && rm -rf  "$DST_APATH"
+test -d "$BUILD_PATH" && rm -rf "$BUILD_PATH"
+mkdir -p $BUILD_PATH
+
+##
+cd $BUILD_PATH && {
 ###################
 
 #
-$SOURCE_PATH/configure --host=$TARGET --target=$TARGET --prefix=/ \
-	--disable-multib
+$SRC_APATH/configure --prefix='' \
+	--target=$TARGET \
+	--with-sysroot=/ \
 
 #
-make -j4
+make -j6
 
 #
-make install DESTDIR=$DEST_APATH
+make install DESTDIR=$DST_APATH
 
 ###################
 	cd - </dev/null
