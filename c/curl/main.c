@@ -78,7 +78,7 @@ int main(int agrc, char *argv[]) {
         NULL
     };
 
-    struct url_t * new_url, *p, *n;
+    struct url_t *p, *n;
     struct list_head *list,*next;
     struct firmware_header header;
     int ret, i;
