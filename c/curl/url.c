@@ -34,7 +34,7 @@ int url_check (struct url_t * url) {
         url->flags |= URLF_PROTO | URLF_PROTO_FILE;
     } else {
         printf("Unknown Protocol\n");
-        return -1;   
+        return -1;
     }
 
     CURL *curl = curl_easy_init();
@@ -45,17 +45,17 @@ int url_check (struct url_t * url) {
 
 
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_easy_setopt(curl, CURLOPT_RANGE, "0-2048");
+    curl_easy_setopt(curl, CURLOPT_RANGE, "0-100");
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, NULL);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_func_write_dummy);
 
     if ((ret = curl_easy_perform(curl)) != CURLE_OK) {
         printf("curl request return code: %d\n", ret);
     }
-    
+
 
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
-    
+
     switch (code) {
         case 200:
         case 206:
