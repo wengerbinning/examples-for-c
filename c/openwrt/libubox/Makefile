@@ -19,8 +19,11 @@ ulog: ulog.o
 	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
+klist: klist.o
+	@$(ECHO) [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
-all: ulog FORCE
+all: ulog klist FORCE
 
 
 .PHONY: all
