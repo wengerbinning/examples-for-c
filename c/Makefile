@@ -1,32 +1,41 @@
 
+ECHO    ?= echo
+CC      ?= gcc
+#
+CFLAGS   ?= -g
+CPPFLAGS ?= -Iinclude
+LIBS     ?= -lcurl
+#
 prefix  ?=/usr
 DESTDIR ?=$(shell pwd)/destdir
-
+#
 bin     ?= $(prefix)/bin
 sbin    ?= $(prefix)/sbin
 include ?= $(prefix)/include
 lib     ?= $(prefix)/lib
 
+
+##
 all:
 
 %.o: %.c
-	@echo [CC] $^
-	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $^
+	@$(ECHO) [CC] $<
+	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
 
 ##
 progs := helloworld
 helloworld: helloworld.o
-	@echo [LD] $@
+	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 progs += environment
 environment: environment.o
-	@echo [LD] $@
+	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 progs += readlink
 readlink: readlink.o
-	@echo [LD] $@
+	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 
@@ -35,8 +44,8 @@ readlink: readlink.o
 all: $(progs)
 
 clean: FORCE
-	-rm -rf *.o
-	-rm -rf $(progs)
+	-rm -f *.o
+	-rm -f $(progs)
 
 install: $(progs)
 	install -d $(DESTDIR)$(bin)

@@ -25,20 +25,20 @@
 #define DEBUG_LEVEL_C       
 #endif /* DEBUG */
 
-#define error(level, fmt, ...) \
+#define error(fmt, ...) \
     printf("[%02d ERROR] "fmt"\n",level, ##__VA_ARGS__)
 
-#define warnning(level, fmt, ...) \
+#define warning(fmt, ...) \
     printf("[%02d WARNNING] "fmt"\n",level, ##__VA_ARGS__)
 
-#define info(level, fmt, ...) \
+#define note(fmt, ...) \
     printf("[%02d INFO] "fmt"\n", level, ##__VA_ARGS__)
 
 #if defined(DEBUG)
-#define debug(level, fmt, ...) \
+#define debug(fmt, ...) \
     printf("[%02d DEBUG] "fmt"\n",level, ##__VA_ARGS__)
 #else
-#define debug(level, fmt, ...) do {} while(0)
+#define debug(fmt, ...) do {} while(0)
 #endif /* DEBUG */
 
 #define LOG_LEVEL_DEBUG
