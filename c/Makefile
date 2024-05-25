@@ -39,6 +39,15 @@ readlink: readlink.o
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 
+progs += server
+server: usock0.o
+	@$(ECHO) [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
+
+progs += client
+client: usock1.o
+	@$(ECHO) [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 ##
 all: $(progs)
