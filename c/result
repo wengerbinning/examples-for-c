@@ -1,5 +1,0 @@
-SHLVL=2
-stdin : /dev/pts/17
-stdout: /mnt/work/wengerbinning/labs/c/result
-stderr: /dev/pts/17
-ENV:./environment
