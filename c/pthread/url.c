@@ -10,9 +10,10 @@
 
 
 
-static size_t curl_func_write_dummy (void *ptr, size_t size, size_t nmemb, void *stream)
+static size_t curl_func_write_dummy (void *ptr,
+	size_t size, size_t nmemb, void *stream)
 {
-    return nmemb;
+	return nmemb;
 }
 
 int url_check (url_t *url) {

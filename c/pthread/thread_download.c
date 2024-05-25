@@ -56,6 +56,53 @@ static size_t curl_func_write_buffer (void *ptr, size_t size, size_t nmemb, void
 	return nmemb;
 }
 
+static size_t curl_func_write_file (void *ptr, size_t size, size_t nmemb, void *data)
+{
+	FILE *file = data;
+	block_t *blk;
+
+	devel_debug("write %d(= %d * %d) from %p, to %p", (size * nmemb), size, nmemb, ptr, data);
+
+	devel_debug("current block %p, size: %d", buf->blk, buf->blk->size);
+
+	if (buf->blk->size <= 0 && buf->blk->list.next) {
+		// blk =
+		devel_debug("block %p is full, use next ...", buf->blk);
+		if (list_is_last(&buf->blk->list, &buf->blk_list)) {
+			devel_debug("block %p is last, start first!", buf->blk);
+			buf->blk = list_first_entry(&buf->blk_list, block_t, list);
+			buf->blk->size = BUFIZE;
+			return 0;
+		} else {
+			buf->blk = list_entry(buf->blk->list.next, block_t, list);
+			buf->blk->size = BUFIZE;
+		}
+	} else if (buf->blk->size <= 0) {
+		devel_debug("buffer all full current block size %d", buf->blk->size);
+		return 0;
+	}
+
+	blk = buf->blk;
+
+	if (blk->size >= (size * nmemb)) {
+		memcpy(blk->data, ptr, (size * nmemb));
+		blk->size -= (size * nmemb);
+		buf->size += (size * nmemb);
+		return (size * nmemb);
+	} else if (blk->size > 0) {
+		memcpy(blk->data, ptr, blk->size);
+		blk->size -= blk->size;
+		buf->size += blk->size;
+		return buf->size;
+	} else {
+		devel_error("curl write Error");
+		return 0;
+	}
+
+
+	return nmemb;
+}
+
 
 void *thread_task (void *arg) {
 	download_t *download;

@@ -1,31 +1,46 @@
-prefix=/usr
-DESTDIR=$(shell pwd)/destdir
 
-bin=$(prefix)/bin
-sbin=$(prefix)/sbin
+prefix  ?=/usr
+DESTDIR ?=$(shell pwd)/destdir
+
+bin     ?= $(prefix)/bin
+sbin    ?= $(prefix)/sbin
+include ?= $(prefix)/include
+lib     ?= $(prefix)/lib
 
 all:
 
+%.o: %.c
+	@echo [CC] $^
+	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $^
+
+##
+progs := helloworld
 helloworld: helloworld.o
-	$(CC) $(CFLAGS) -o $@ $<
+	@echo [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
+progs += environment
 environment: environment.o
-	$(CC) $(CFLAGS) -o $@ $<
+	@echo [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
-system: system.o
-	$(CC) $(CFLAGS) -o $@ $<
-
+progs += readlink
 readlink: readlink.o
-	$(CC) $(CFLAGS) -o $@ $<
+	@echo [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
-all: helloworld environment system readlink
 
-clean:
-	-rm -f *.o
-	-rm -f helloworld environment system readlink
-	-rm -f -r $(DESTDIR)
 
-install: helloworld environment system readlink
-	@install -d $(DESTDIR)$(bin)
-	@install -t $(DESTDIR)$(bin) helloworld environment system readlink
+##
+all: $(progs)
+
+clean: FORCE
+	-rm -rf *.o
+	-rm -rf $(progs)
+
+install: $(progs)
+	install -d $(DESTDIR)$(bin)
+	install -t $(DESTDIR)$(bin) $(progs)
 	
+.PHONY: all clean install
+FORCE:

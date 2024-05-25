@@ -3,8 +3,8 @@
 **/*.a
 **/*.so
 
+helloworld
 
 .env
-.variablerc
-
-helloworld
+.var
+.environment

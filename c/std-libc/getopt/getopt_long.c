@@ -18,6 +18,7 @@ static char short_options[] = "hvV";
 static struct option long_options[__OPT_MAX] = {
     [OPT_HELP] =    {"help",    no_argument, 0, 0},
     [OPT_VERISON] = {"version", no_argument, 0, 0},
+    
 };
 
 
