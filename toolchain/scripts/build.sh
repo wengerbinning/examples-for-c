@@ -24,16 +24,13 @@ debug() {
 }
 #
 run_cmd() {
-	local srt_time cur_time ret
-	srt_time=$(date +%s)
-	eval "$@"; ret=$?
+	local ret
+	eval "time $@"; ret=$?
 	test ${ret:-1} -ne 0 && {
 		error "running command error($ret)!"
 		debug "command:$@"
 		exit $ret
 	}
-	cur_time=$(date +%s)
-	# notice Runing work $1 use $((cur_time -srt_time)) second.
 }
 
 # =========================================================================== #
@@ -114,73 +111,6 @@ workflow_running() {
 
 # =========================================================================== #
 
-##
-TOOLCHAIN_NAME="toolchain-x86_64-unknown-linux-gnu"
-#
-TOOLCHAIN_HOME="/opt/toolchains"
-TOOLCHAIN_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}"
-#
-RELEASED_HOME="/mnt/srv/released/toolchains"
-RELEASED_PATH="${RELEASED_HOME}/${TOOLCHAIN_NAME}"
-#
-ARCH=x86_64
-TARGET="x86_64-unknown-linux-gnu"
-CROSS_PREFIX="x86_64-unknown-linux-gnu-"
-#
-PATH="$TOOLCHAIN_PATH/bin${PATH:+:$PATH}"
-export PATH
-#
-CC=${CROSS_PREFIX}gcc
-CFLAGS="-O3 -g -Wno-attributes"
-export CC CFLAGS
-
-##
-BUILD_PATH=".build"
-SRC_APATH=$PWD
-DST_APATH=${PWD}/destdir
-
-# =========================================================================== #
-
-# Configure
-workflow_add init workflow0
-workflow0() {
-	#
-	test -d "$BUILD_PATH" && rm -rf "$BUILD_PATH"
-	mkdir -p $BUILD_PATH
-
-	cd $BUILD_PATH && {	
-	#
-	run_cmd $SRC_APATH/configure --prefix=/ \
-		--host=$TARGET \
-		--target=$TARGET \
-		--disable-multilib \
-		--with-headers=$TOOLCHAIN_PATH/include
-			#
-		cd - >/dev/null
-	}
-}
-
-# Build 
-workflow_add workflow1
-workflow1() {
-	cd $BUILD_PATH && {
-		notice "Start workflow 1 ..." 
-		#
-		run_cmd make install-bootstrap-headers=yes install-headers DESTDIR=$DST_APATH
-		#
-		run_cmd make -j$(nproc) csu/subdir_lib
-		#
-		run_cmd install -d $DST_APATH/lib
-		run_cmd install -t $DST_APATH/lib csu/crt1.o csu/crti.o csu/crtn.o
-		#
-		run_cmd ${CC} -nostdlib -nostartfiles -shared -x c /dev/null -o $DST_APATH/lib/libc.so
-		#
-		run_cmd install -d $DST_APATH/include/gnu/
-		run_cmd touch $DST_APATH/include/gnu/stubs.h
-		#
-		cd - >/dev/null
-	}
-}
 
 # =========================================================================== #
 

@@ -50,14 +50,11 @@ test -d "$BUILD_PATH" && rm -rf "$BUILD_PATH"
 mkdir -p $BUILD_PATH
 
 ##
-# cd $BUILD_PATH && {
+cd $BUILD_PATH && {
 	notice "Start build project ..."
 ###############################################################################
 
-#
-make ARCH=$ARCH headers_install INSTALL_HDR_PATH=$DST_APATH
-
 ###############################################################################
-#	cd - </dev/null
+	cd - </dev/null
 	notice "Project build successful!"
-# }
+}
