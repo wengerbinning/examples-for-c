@@ -1,16 +1,29 @@
 #include<stdio.h>
 #include<unistd.h>
+#include <sys/wait.h>
 
-int main(int argc, const char *argv[]) {
-    pid_t pid = 0;
+#define note(fmt, ...)         printf(fmt"\n", ## __VA_ARGS__)
 
-    pid = fork();
+int main (int argc, const char *argv[]) {
+	
+	pid_t pid = 0;
+	int ret;
 
-    if( pid == 0 ) {
-        execl("/usr/bin/pwd", "/usr/bin/pwd", NULL);
-    }
+	pid = fork();
+	if ( pid == 0 ) {
+		execl("./worker", "/worker", "-t", "10", NULL);
+	}
 
-    printf("%d\n",pid);
+	pid = fork();
+	if ( pid == 0 ) {
+		execl("./worker", "/worker", "-t", "10", NULL);
+	}
 
-    return 0;
+
+	// wait(&ret);
+	while ((pid = waitpid(-1, &ret, 0)) > 0) {
+		note("sub progress(%d) return code: %d",pid, WEXITSTATUS(ret));
+	}
+
+	return 0;
 }

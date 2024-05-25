@@ -14,14 +14,18 @@ all:
 worker: worker.o
 	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-	
 
-all: worker
+manager: fork.o
+	@$(ECHO) [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
+
+all: worker manager
 
 
 clean:
 	-rm -f *.o
 	-rm -f worker
+	-rm -f manager
 
 .PHONY: all clean
 
