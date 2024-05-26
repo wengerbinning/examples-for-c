@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define RESULT_FILE "result.txt"
-#define BUFIZE 256
+#define BUFIZE 35
 
 #define HEXDUMP_COLUM	16
 #define HEXDUMP_CHAR1	' '
@@ -27,9 +27,14 @@ static inline bool str2bool(const char *str) {
 	return false;
 }
 
+static inline char printchar(char chr) {
+	return (chr >31 && chr < 127) ? chr : '.';
+}
+
 void hexdump (const void *ptr, unsigned int size) {
 	int i, j;
-	unsigned char *buf;
+	unsigned char *buf1, *p;
+	unsigned char *buf2, *q;
 	const char *env;
 	char chr1, chr2;
 	int col;
@@ -47,49 +52,48 @@ void hexdump (const void *ptr, unsigned int size) {
 	env = getenv("HEXDUMP_CHAR2");
 	chr2 = env ? *(char *)env : HEXDUMP_CHAR2;
 
-	buf = malloc(col);
-	memset(buf, 0, col);
+	buf1 = malloc(col * (2 + 1));
+	buf2 = malloc(col * (1 + 1));
+	memset(buf1, 0, col * 3);
+	memset(buf2, 0, col * 2);
+	p = buf1;
+	q = buf2;
 
 	for (i = 0; i < size; i++) {
-		printf("%02X", *(unsigned char *)(ptr + i));
-		buf[i % col] = *(unsigned char *)(ptr + i);
+		sprintf(p, "%02X", *(unsigned char *)(ptr + i));
+		sprintf(q, "%c", printchar(*(unsigned char *)(ptr + i)));
+		p = p + 2; q++;
 
-		if (((i + 1) % col) || ascii)
-			printf("%c", chr1);
-		else
-			printf("\n");
+		if (((i + 1) % col)) {
+			sprintf(p, "%c", printchar(chr1));
+			sprintf(q, "%c", printchar(chr2));
+			p++; q++;
+		}
 
-		if (!((i + 1) % col) && ascii) {
-			printf(" | ");
-			for (j = 0; j < col; j++) {
-				printf("%c", (buf[j] > 31 && buf[j] < 128) ? buf[j] : '.');
-				if (j != col - 1)
-					printf("%c", chr2);
-			}
-			memset(buf, 0, col);
-			printf ("\n");
-
+		if (!((i + 1) % col)) {
+			printf("%s | %s\n", buf1, buf2);
+			memset(buf1, 0, col * 3);
+			memset(buf2, 0, col * 2);
+			p = buf1; q = buf2;
 		}
 	}
 
 	if (size % col) {
 		for (i = 0; i < (col - (size % col)); i++) {
-			printf("  ");
-			if ((i != (col - (size % col) - 1)) || ascii)
-				printf("%c", chr1);
-		}
-		if (ascii) {
-			printf(" | ");
-			for (j = 0; j < col; j++) {
-				printf("%c", (buf[j] > 31 && buf[j] < 127) ? buf[j] : '.');
-				if (j != col - 1)
-					printf("%c", chr2);
+			sprintf(p, "  "); p = p + 2;
+			sprintf(q, "%c", printchar(' ')); q++;
+			if ((i != (col - (size % col) - 1))) {
+				sprintf(p, "%c", chr1);
+				sprintf(q, "%c", chr2);
+				p++; q++;
 			}
 		}
-		printf("\n");
+
+		printf("%s | %s\n", buf1, buf2);
 	}
 
-	free(buf);
+	free(buf1);
+	free(buf2);
 }
 
 #define OVPN_UNKNOWN 0
@@ -106,8 +110,10 @@ int main (int argc, char *argv[]) {
 
 
 
-	file = fopen(RESULT_FILE, "r");
+	//file = fopen(RESULT_FILE, "r");
 	hexdump(buffer, BUFIZE);
+
+return 0;
 
 	while (!feof(file)) {
 		memset(buffer, 0, sizeof(buffer));
