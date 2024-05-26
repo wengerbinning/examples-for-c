@@ -6,9 +6,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include <libubox/ulog.h>
+
 #include "worker.h"
 
-#define WORK_PID "worker.pid"
+#define WORK_PID "/var/run/worker.pid"
 #define BUFIZE 64
 #define PATHIZE 64
 
@@ -67,10 +69,10 @@ bool work_lock (bool force) {
 }
 
 void work_unlock (bool force) {
-	
+
 	int fd, pid;
-	char buffer[BUFIZE + 1];	
-	
+	char buffer[BUFIZE + 1];
+
 	if (access(WORK_PID, F_OK) < 0)
 		return;
 
@@ -146,7 +148,7 @@ void work_init (work_t * work) {
 
 int main (int argc, char *argv[]) {
 	int opt, idx;
-	
+
 	work_init(&work);
 
 	while ((opt = getopt_long(argc, argv, soptions, loptions, &idx)) != -1) {
@@ -176,7 +178,7 @@ int main (int argc, char *argv[]) {
 	if (!work_lock(work.force)) {
 		return -WORKE_BUSY;
 	}
-	
+
 	note("Worker start running ...");
 
 	sleep(work.timeout ? work.timeout : 1);

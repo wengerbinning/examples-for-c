@@ -231,6 +231,7 @@ int main (int argc, char *argv[]) {
 					if (0 != regexec(&regex, col1, nmatch, pmatch, 0)) {
 						continue;
 					}
+					regfree(&regex);
 
 					// User Name
 					col2 = ptr;

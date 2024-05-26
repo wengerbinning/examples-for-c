@@ -49,6 +49,11 @@ client: usock1.o
 	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
+progs += regex
+regex: regex.o
+	@$(ECHO) [LD] $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
+
 ##
 all: $(progs)
 
@@ -59,6 +64,6 @@ clean: FORCE
 install: $(progs)
 	install -d $(DESTDIR)$(bin)
 	install -t $(DESTDIR)$(bin) $(progs)
-	
+
 .PHONY: all clean install
 FORCE:
