@@ -11,15 +11,17 @@ all:
 	@$(ECHO) [CC] $<
 	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
 
+progs := parse
 parse: main.o
 	@$(ECHO) [LD] $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 
-all: parse FORCE
+all: $(progs) FORCE
 
 clean:
 	-rm -f *.o
+	-rm -f $(progs)
 
 .PHONY: all clean
 FORCE:
