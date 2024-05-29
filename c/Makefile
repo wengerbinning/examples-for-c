@@ -6,64 +6,133 @@ CFLAGS   ?= -g
 CPPFLAGS ?= -Iinclude
 LIBS     ?= -lcurl
 #
-prefix  ?=/usr
 DESTDIR ?=$(shell pwd)/destdir
-#
+prefix  ?=usr
 bin     ?= $(prefix)/bin
 sbin    ?= $(prefix)/sbin
 include ?= $(prefix)/include
 lib     ?= $(prefix)/lib
+#
+tlibs :=
+slibs :=
+slibs-cflags := -fPIC
+slibs-ldflags :=
+progs :=
+progs-libs :=
+progs-cflags := -Wl,-rpath=./
+progs-ldflags := -L./
 
 
-##
 all:
 
-%.o: %.c
-	@$(ECHO) [CC] $<
-	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
+# =========================================================================== #
+
+## macro function
+
+#
+define log
+echo -en "\e[32m [$(strip $(2))] \e[0m"; echo $(strip $(3))
+endef
+
+# ---------------------------------------------------------------------------- #
+
+#
+define slibs_perpare
+slibs += lib$(strip $(1)).so
+progs-libs += -l$(strip $(1))
+objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+cflags   := $(CFLAGS) $(slibs-cflags) $($(strip $(1))-cflags)
+cppflags = $(CPPFLAGS) $(slibs-cppflags) $($(strip $(1))-cppflags)
+ldflags  := $(LDFLAGS) $(slibs-ldflags) $($(strip $(1))-ldflags)
+libs  := $(LIBS) $(slibs-libs) $($(strip $(1))-libs)
+endef
+
+#
+define progs_perpare
+progs += $(strip $(1))
+objs  := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+cflags   := $(CFLAGS) $(progs-cflags) $($(strip $(1))-cflags)
+cppflags = $(CPPFLAGS) $(progs-cppflags) $($(strip $(1))-cppflags)
+ldflags  := $(LDFLAGS) $(progs-ldflags) $($(strip $(1))-ldflags)
+libs  := $(LIBS) $(progs-libs) $($(strip $(1))-libs)
+endef
+
+#
+define slibs_build
+$(objs): %.o: %.c
+	@$(call log, info, CC, $$@)
+	@$(CC) -c $(cflags) $(cppflags) $$<
+lib$(strip $(1)).so: $(objs)
+	@$(call log, info, LD, $$@)
+	@$(CC) $(cflags) $(ldflags) -shared -o $$@ $$^ $(libs)
+endef
+
+#
+define progs_build
+$(objs): %.o: %.c
+	@$(call log, info, CC, $$@)
+	@$(CC) -c $(cflags) $(cppflags) $$<
+$(1): $(objs)
+	@$(call log, info, LD, $$@)
+	@$(CC) $(cflags) $(ldflags) -o $$@ $$^ $(libs)
+endef
+
+#
+define perpare
+build_type   := $(strip $(1))
+build_target := $(strip $(2))
+endef
+
+#
+define build
+$(if $(findstring $(strip $(1)), progs slibs tlibs),, $(error Not support this type:$(strip $(1))))
+$(eval $(call perpare, $(1), $(2)))
+$(eval $(call $(strip $(1))_perpare, $(2)))
+$(eval $(call $(strip $(1))_build, $(2)))
+endef
+
+# =========================================================================== #
 
 ##
-progs := helloworld
-helloworld: helloworld.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
-progs += environment
-environment: environment.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
-progs += readlink
-readlink: readlink.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
-
-progs += server
-server: usock0.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
-progs += client
-client: usock1.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
-progs += regex
-regex: regex.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
+$(eval $(call build,slibs,version))
 
 ##
-all: $(progs)
+$(eval $(call build,progs,helloworld))
+#
+$(eval $(call build,progs,environment))
+#
+$(eval $(call build,progs,readlink))
+#
+$(eval $(call build,progs,regex))
 
-clean: FORCE
+#
+server-objs := usock0.o
+$(eval $(call build,progs,server))
+#
+client-objs := usock1.o
+$(eval $(call build,progs,client))
+
+
+# =========================================================================== #
+
+##
+all: $(tlibs) $(slibs) $(progs)
+
+##
+clean:
 	-rm -f *.o
+	-rm -f $(tlibs) $(slibs)
 	-rm -f $(progs)
 
-install: $(progs)
-	install -d $(DESTDIR)$(bin)
-	install -t $(DESTDIR)$(bin) $(progs)
+##
+install: $(progs) FORCE
+	install -d $(DESTDIR)/$(bin)
+	install -t $(DESTDIR)/$(bin) $(progs)
 
+##
+unistall:
+	-rm -rf $(DESTDIR)/$(bin)
+
+##
 .PHONY: all clean install
 FORCE:

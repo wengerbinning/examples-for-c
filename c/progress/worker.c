@@ -132,16 +132,16 @@ void work_init (work_t * work) {
 	/** */
 	work->pid = getpid();
 	work->ppid = getppid();
-	memset(work->pcomm, 0, BUFIZE + 1);
+
 	memset(path, 0, sizeof(path));
-	snprintf(path, PATHIZE, "/proc/%d/comm", work->ppid);
-	if ((fd = open(path, O_RDONLY)) > 0) {
+	snprintf(paif ((fd = open(path, O_RDONLY)) > 0) {
 		read(fd, work->pcomm, BUFIZE);
 		if((p = strstr(work->pcomm, "\n")))
 			*p = '\0';
 
 		close(fd);
-	}
+	}th, PATHIZE, "/proc/%d/comm", work->ppid);
+
 
 	/** */
 }
