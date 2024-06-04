@@ -1,31 +1,7 @@
-ECHO ?= echo
-CC   ?= gcc
+include $(TOPDIR)/rule.mk
 
-CPPFLAGS ?= -I/usr/local/lib
-LDFLAGS	 ?= -L/usr/local/lib
-LIBS     ?= -ldevel
+$(eval $(call build, share_lib, devel))
 
-CFLAGS  ?= -g -fPIC
+$(eval $(call build, program, main))
 
-all:
-
-%.o: %.c
-	@$(ECHO) [CC] $@
-	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $^
-
-libdevel.so: devel.o
-	@$(ECHO) [LD] $@
-	@$(CC) -shared -o $@ $^
-
-main: main.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
-
-all: main libdevel.so
-
-clean: FORCE
-	-rm -f *.o
-
-.PHONY: all clean
-
-FORCE:
+include $(TOPDIR)/toplevel.mk

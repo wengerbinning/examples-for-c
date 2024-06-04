@@ -110,12 +110,6 @@ void hexdump (const void *ptr, unsigned int size) {
 #define OVPN_ROUTE 2
 #define OVPN_STATS 3
 
-int get_len_blob_buf (struct kvlist *kv, const void *data) {
-    return sizeof(struct blob_buf);
-}
-
-
-
 int main (int argc, char *argv[]) {
 	struct kvlist kv_list;
 	struct blob_buf *b;
@@ -266,7 +260,7 @@ int main (int argc, char *argv[]) {
 
 	kvlist_for_each(&kv_list, name, b) {
 		printf("blob:%s\n",blobmsg_format_json_indent(b->head, true, -1));
-		blob_buf_free(b);
+
 	}
 
 	kvlist_free(&kv_list);
