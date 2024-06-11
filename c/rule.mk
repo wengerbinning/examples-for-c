@@ -100,10 +100,19 @@ $(objs): %.o: %.c
 	@$(CC) -c$(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags)) $$<
 lib$(strip $(1)).a: $(objs)
 	$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(AR) crv $$@ $$^
+	@$(AR) crv $$@ $$^ >/dev/null
 endef
 
-## BUild program
+## Build Library
+define library_perpare
+$(eval $(call $(strip $(1))_lib_perpare, $(2)))
+endef
+#
+define library_build
+$(eval $(call $(strip $(1))_lib_build, $(2)))
+endef
+
+## Build program
 define program_perpare
 progs    += $(strip $(1))
 objs     := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
@@ -130,10 +139,10 @@ endef
 
 #
 define build
-$(if $(findstring $(strip $(1)), module program share_lib static_lib),, $(error Not support this type:$(strip $(1))))
-$(eval $(call perpare, $(1), $(2)))
-$(eval $(call $(strip $(1))_perpare, $(2)))
-$(eval $(call $(strip $(1))_build, $(2)))
+$(if $(findstring $(strip $(1)), module program library static_lib),, $(error Not support this type:$(strip $(1))))
+$(eval $(call perpare, $(1), $(2), $(3)))
+$(eval $(call $(strip $(1))_perpare, $(2), $(3)))
+$(eval $(call $(strip $(1))_build,   $(2), $(3)))
 endef
 
 

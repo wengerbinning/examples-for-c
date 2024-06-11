@@ -1,8 +1,8 @@
 
-$(eval $(foreach mod,$(dirs),$(call build, module, $(mod))))
+	$(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
 
 ##
-all: $(dirs) $(stlibs) $(shlibs) $(progs)
+all: $(mdirs) $(stlibs) $(shlibs) $(progs)
 
 ##
 clean: FORCE $(modules-clean)
@@ -10,14 +10,14 @@ clean: FORCE $(modules-clean)
 	-rm -f $(stlibs) $(shlibs) $(progs)
 
 ##
-install: $(dirs) $(progs) FORCE
+install: $(modules-install) $(progs) FORCE
 	install -d $(DESTDIR)/$(bin)
 	install -t $(DESTDIR)/$(bin) $(progs)
 
 ##
-unistall:
+unistall: $(modules-uninstall) FORCE
 	-rm -rf $(DESTDIR)/$(bin)
 
 ##
-.PHONY: all clean install $(dirs) $(modules-clean) FORCE
+.PHONY: all clean install unistall $(mdirs) $(modules-clean) $(modules-install) $(modules-uninstall) FORCE
 FORCE:

@@ -5,10 +5,10 @@ TOPDIR := $(CURDIR)
 include $(TOPDIR)/rule.mk
 # =========================================================================== #
 
-dirs := file debug pipe
+mdirs :=  version debug file pipe
 
 ##
-$(eval $(call build, share_lib, version))
+$(eval $(call build, library, share, version))
 
 ##
 $(eval $(call build, program, helloworld))
