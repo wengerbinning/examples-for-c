@@ -1,0 +1,24 @@
+#!/bin/sh
+
+## mount
+mount -n -t proc     proc     /proc
+mount -n -t sysfs    sysfs    /sys
+mount -n -t devtmpfs devtmpfs /dev
+mount -n -t tmpfs    tmpfs    /run
+
+mkdir /dev/pts
+mount -n -t devpts   devpts   /dev/pts
+
+## device
+
+##
+ldconfig
+
+##
+modprobe softdog
+modprobe watchdog
+
+## Change to sh
+# exec /bin/sh
+# exec /linuxrc
+exec /sbin/init
