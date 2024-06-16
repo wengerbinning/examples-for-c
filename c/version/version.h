@@ -20,6 +20,9 @@ int vercode;
      (m & VER_FIELD_MASK << VER_PHASE_OFST) | \
      (n & VER_FIELD_MASK << VER_PATCH_OFST))
 
+#define VERSTR(ver) \
+    VER_MAJOR(ver), VER_MINOR(ver), VER_PHASE(ver), VER_PATCH(ver)
+
 unsigned int ver_major (unsigned int ver);
 unsigned int ver_minor (unsigned int ver);
 unsigned int ver_phase (unsigned int ver);
