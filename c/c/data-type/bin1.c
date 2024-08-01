@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TEST_CLEAN_BITS(a, b, mask)  ( (a & mask) & ((a & mask) ^ (b & mask)))
+#define TEST_SET_BITS(a, b, mask)    (~(a & mask) & ((a & mask) ^ (b & mask)))
 
 
 unsigned int mask(unsigned int ofst, unsigned int bits) {
@@ -39,14 +41,16 @@ unsigned int mask2ofst (unsigned int mask) {
 
 int main (int argc, char *argv[]) {
     int a, b;
+    unsigned int n;
 
     if (!argv[1])
         return 0;
+    n = (unsigned int) atoi(argv[1]);
+    a = mask2ofst(n);
+    b = mask2bits(n);
 
-    a = mask2ofst(atoi(argv[1]));
-    b = mask2bits(atoi(argv[1]));
-
-    printf("mask %08X, ofst: %d, bits: %d, mask: %08X\n", atoi(argv[1]), a, b, mask(a, b));
+    printf("mask %08X, ofst: %d, bits: %d, mask: %08X\n", n, a, b, mask(a, b));
+    printf("set %08X, clear: %08X\n",TEST_SET_BITS(n, mask(a, b), mask(a, b)),TEST_CLEAN_BITS(mask(a, b), n, mask(a, b)));
 
     return 0;
 }

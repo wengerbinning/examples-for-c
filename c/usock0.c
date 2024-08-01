@@ -28,7 +28,6 @@ struct client_t {
 } client_t;
 
 void usock_handler (int sig) {
-	unlink(SRV_SOCK);
 	exit(0);
 }
 
@@ -38,7 +37,7 @@ int main (int argc, char *argv[]) {
 
 	srv_addr.sun_family = AF_UNIX;
 	strcpy(srv_addr.sun_path, SRV_SOCK);
-	
+
 
 	if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		error("failed to create socket");
@@ -46,8 +45,8 @@ int main (int argc, char *argv[]) {
 	}
 
 	signal(SIGINT, usock_handler);
-	
-	unlink(SRV_SOCK);
+
+
 	if ( bind(sock, (struct sockaddr *)&srv_addr, sizeof(srv_addr)) < 0) {
 		error("failed to bind socket");
 		return -1;
@@ -65,7 +64,7 @@ int main (int argc, char *argv[]) {
 	// 		rbuffer[strlen(rbuffer) + 1] = '\n';
 
 	// 	printf("recev: %s", rbuffer);
-		
+
 	// 	memset(wbuffer, 0, sizeof(wbuffer));
 	// 	sprintf(wbuffer, "server say hello\n");
 	// 	write(cli_sock, wbuffer, BUFIZE);
@@ -112,7 +111,7 @@ void *thread_receive_worker (void *arg) {
 				note("close connect %d", sock);
 			else
 				error("read error");
-			
+
 			close(sock);
 			return NULL;
 		}
@@ -127,8 +126,8 @@ void *thread_receive_worker (void *arg) {
 		}
 
 		sleep(3);
-		
-		// 
+
+		//
 		memset(wbuffer, 0, sizeof(wbuffer));
 		sprintf(wbuffer, "server say hello\n");
 		send(sock, wbuffer, BUFIZE, 0);

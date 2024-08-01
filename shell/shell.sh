@@ -1,18 +1,12 @@
-#!/usr/bin/bash
-
-idx=0
-file="data.txt"
 
 
-lcnt=$(wc -l $file | cut -d' ' -f1)
-while [ $lcnt -gt 0 ]; do 
-    line=$(sed -nre "$lcnt p" $file)
-    prefix=$(echo $line | cut -d':' -f1)
-    value=$(echo $line | cut -d':' -f2)
-    case "$prefix" in
-    TRANSLATION*)
-        echo $value
-    ;;
-    esac
-    lcnt=$((lcnt - 1))
+
+test -f data.bin && rm -f data.bin
+for idx in $(seq 0 255); do
+	printf "00 %02X" $idx | xxd -r > .data.bin~
+	test -f data.bin && cat data.bin .data.bin~ > .data.bin
+	test -f data.bin || cat .data.bin~ > .data.bin
+	cp .data.bin data.bin
 done
+rm -f .data.bin .data.bin~
+xxd -u data.bin

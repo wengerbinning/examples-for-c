@@ -2,7 +2,6 @@
 
 int vercode;
 
-
 unsigned int ver_major (unsigned int ver) {
     return (ver >> VER_MAJOR_OFST) & VER_FIELD_MASK;
 }

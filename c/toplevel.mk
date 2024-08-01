@@ -1,5 +1,5 @@
 
-	$(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
+$(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
 
 ##
 all: $(mdirs) $(stlibs) $(shlibs) $(progs)
