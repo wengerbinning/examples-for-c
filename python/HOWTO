@@ -1,0 +1,2 @@
+virtualenv --python $(which python2) .venv2
+virtualenv3 --python $(which python2) .venv2
