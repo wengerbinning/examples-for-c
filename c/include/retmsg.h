@@ -84,15 +84,16 @@
   * _RET_SET_MSG(name, code, message)
   * _RET_GET_MSG(name, code)
 
- For Example A:1
+ For Example A:
 
+  > test.h
   >> GLOBAL_ERR_MSG_INIT(test, 10);
   >> GLOBAL_NOR_MSG_INIT(test, 10);
   >>
   >> #define ERR_GET_MSG(code) _ERR_GET_MSG(test, code)
   >> #define NOR_GET_MSG(code) _NOR_GET_MSG(test, code)
   >> #define RET_GET_MSG(code) _RET_GET_MSG(test, code)
-  >
+  > test.c
   >> GLOBAL_ERR_MSG_INIT(test, 10) = {
   >>     ERR_MSG_SET(1, "parameter error"),
   >> };
@@ -100,6 +101,21 @@
   >> GLOBAL_NOR_MSG_INIT(test, 10) = {
   >>     ERR_NOR_SET(1, "Need send message"),
   >> };
+
+ For Example B:
+
+   > test.h
+   >> STATIC_ERR_MSG_INIT(test) = {
+   >>   ERR_MSG_SET(1, "Parameter error"),
+   >> };
+   >> STATIC_NOR_MSG_INIT(test) = {
+   >>   ERR_NOR_SET(1, "Need send message"),
+   >> };
+   >>
+   >> #define ERR_GET_MSG(code) _ERR_GET_MSG(test, code)
+   >> #define NOR_GET_MSG(code) _NOR_GET_MSG(test, code)
+   >> #define RET_GET_MSG(code) _RET_GET_MSG(test, code)
+
  *************************************************************************** */
 
 #endif /* __RETURN_MESSAGE_H__ */
