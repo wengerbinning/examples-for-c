@@ -32,7 +32,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-v", "--verbose",
-        action = "count",
+        action = "store_false",
         help = "verbose information",
         default = 0
     )
