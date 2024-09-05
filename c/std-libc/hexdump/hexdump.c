@@ -7,7 +7,7 @@
 
 #define HEXDUMP_COLUM	16
 #define HEXDUMP_CHAR1	' '
-#define HEXDUMP_ASCII	true
+#define HEXDUMP_ASCII	false
 #define HEXDUMP_CHAR2	' '
 
 void hexdump (const void *ptr, unsigned int size) {

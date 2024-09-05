@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <getopt.h>
 
+#include <stdlib.h>
+#include <unistd.h>
+
 #include "develop.h"
 
 struct param_t {
@@ -10,25 +13,39 @@ struct param_t {
 enum options_idx {
     OPT_HELP,
     OPT_VERISON,
+    OPT_TIMEOUT,
+    OPT_VERBOSE,
 
     __OPT_MAX
 };
 
-static char short_options[] = "hvV";
+/**
+    - required argument: prog -t 1000
+    - optional argument: prog -vvvvv
+ */
+static char short_options[] = "ht:v::V";
+
 static struct option long_options[__OPT_MAX] = {
-    [OPT_HELP] =    {"help",    no_argument, 0, 0},
-    [OPT_VERISON] = {"version", no_argument, 0, 0},
-    
+    [OPT_HELP]    = {"help",          no_argument, 0, 'h'},
+    [OPT_VERISON] = {"version",       no_argument, 0, 'V'},
+    [OPT_TIMEOUT] = {"timeout", required_argument, 0, 't'},
+    [OPT_VERBOSE] = {"verbose", optional_argument, 0, 'v'},
 };
 
 
 int parse_long_options (const struct option *opt, int idx, struct param_t *param) {
     switch (idx) {
     case OPT_HELP:
-        info("handling long option help");
+        note("handling long option help");
         break;
     case OPT_VERISON:
-        info("handling long option version");
+        note("handling long option version");
+        break;
+    case OPT_TIMEOUT:
+        note("handling timeout %d", atoi(optarg));
+        break;
+    case OPT_VERBOSE:
+        note("handling verbose %d", atoi(optarg));
         break;
     default:
         warning("Unknown handling this option: --%s", opt[idx].name);
@@ -36,30 +53,37 @@ int parse_long_options (const struct option *opt, int idx, struct param_t *param
 }
 
 int main (int argc, char *argv[]) {
-    int opt, idx;
+    char chr;
+    int idx;
     struct param_t param;
 
-    while ((opt = getopt_long(argc, argv, short_options, long_options, &idx)) != -1) {
-        switch (opt) {
+    while ((chr = getopt_long(argc, argv, short_options, long_options, &idx)) != -1) {
+        switch (chr) {
         /* Handing long options. */
         case 0:
             parse_long_options(long_options, idx, &param);
             break;
-        
+
         /* Handling short options. */
         case 'h':
-            info("handling short option help");
+            note("handling short option help");
             break;
         case 'V':
-            info("handling short option version");
+            note("handling short option version");
+            break;
+        case 't':
+            note("handling timeout %s", optarg);
+            break;
+        case 'v':
+            note("handling verbose %s", optarg);
             break;
         /* Handle invalid option. */
         case '?':
         /* Handle unknown valid option. */
         default:
-            warning("Unknown handling this option: -%c", opt);
+            warning("Unknown handling this option: -%c", chr);
         }
-    } 
+    }
 
     return 0;
 }

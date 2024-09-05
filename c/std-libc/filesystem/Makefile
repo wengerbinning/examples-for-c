@@ -8,11 +8,9 @@ all: file
 	@echo "[CC] $@"
 
 
-file: file_open.o file.o
+file: file_fread.o hexdump.o
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 	@echo "[LD] $@"
-
-
 
 clean:
 	-rm -rf *.o
