@@ -1,0 +1,22 @@
+/usr/include/llvm-c/Analysis.h
+llvm /usr/include/llvm-c/BitReader.h
+llvm /usr/include/llvm-c/BitWriter.h
+llvm /usr/include/llvm-c/Comdat.h
+llvm /usr/include/llvm-c/Core.h
+llvm /usr/include/llvm-c/DataTypes.h
+llvm /usr/include/llvm-c/DebugInfo.h
+llvm /usr/include/llvm-c/Deprecated.h
+llvm /usr/include/llvm-c/Disassembler.h
+llvm /usr/include/llvm-c/DisassemblerTypes.h
+llvm /usr/include/llvm-c/Error.h
+llvm /usr/include/llvm-c/ErrorHandling.h
+llvm /usr/include/llvm-c/ExecutionEngine.h
+llvm /usr/include/llvm-c/ExternC.h
+llvm /usr/include/llvm-c/IRReader.h
+llvm /usr/include/llvm-c/LLJIT.h
+llvm /usr/include/llvm-c/LLJITUtils.h
+llvm /usr/include/llvm-c/Linker.h
+llvm /usr/include/llvm-c/Object.h
+llvm /usr/include/llvm-c/Orc.h
+llvm /usr/include/llvm-c/OrcEE.h
+llvm /usr/include/llvm-c/Remarks.h
