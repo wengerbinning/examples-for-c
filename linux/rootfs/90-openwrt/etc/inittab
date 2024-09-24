@@ -1,0 +1,29 @@
+# [id]:[level]:<action>:<program> [param...]
+#
+# action:
+#   - sysinit
+#   - shutdown
+#   - askfirst
+#   - askconsole
+#   - respawn
+
+#
+# 最大参数8个
+# askfirst, askconsole, respawn 可以允许多条记录存在
+
+
+# 自启服务
+# ::sysinit:/etc/init.d/rcS S boot
+#
+# 将通过程序的第一个参数(S)在/etc/rc.d目录下遍历所有的/etc/rc.d/S*文件.
+# runrc -> rcS -> _rc -> add_initd
+#
+
+
+
+
+struct runqueue *q;
+
+
+
+runqueue_task_add(q, &s->proc.task, false);
