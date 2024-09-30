@@ -7,19 +7,43 @@
 
 #define HEXDUMP_COLUM	16
 #define HEXDUMP_CHAR1	' '
-#define HEXDUMP_ASCII	false
+#define HEXDUMP_ASCII	true
 #define HEXDUMP_CHAR2	' '
 
-void hexdump (const void *ptr, unsigned int size) {
+#ifndef note
+#define  note(fmt, ...) printf(fmt"\n", ## __VA_ARGS__)
+#endif
+
+static inline bool str2bool(const char *str) {
+	if (!str)
+		return false;
+
+	if (0 == strcmp(str, "true") || 0 == strcmp(str, "True"))
+		return true;
+
+	if (0 == strcmp(str, "yes") || 0 == strcmp(str, "YES"))
+		return true;
+
+	if (1 == atoi(str))
+		return true;
+
+	return false;
+}
+
+static inline char printchar(char chr) {
+	return (chr > 31 && chr < 127) ? chr : '.';
+}
+
+void hexdump (const void *data, unsigned int size) {
 	int i;
 	char *buf1, *p;
 	char *buf2, *q;
 	const char *env;
 	char chr1, chr2;
-	int col;
+	int col, oft;
 	bool ascii __attribute__((unused));
 
-	if (!ptr)
+	if (!data)
 		return;
 
 	env = getenv("HEXDUMP_COLUM");
@@ -37,27 +61,31 @@ void hexdump (const void *ptr, unsigned int size) {
 	memset(buf2, 0, col * 2);
 	p = buf1;
 	q = buf2;
-
+	oft = 0;
 	for (i = 0; i < size; i++) {
-		sprintf(p, "%02X", *(unsigned char *)(ptr + i));
-		sprintf(q, "%c", printchar(*(unsigned char *)(ptr + i)));
+		sprintf(p, "%02X", *(unsigned char *)(data + i));
+		sprintf(q, "%c", printchar(*(unsigned char *)(data + i)));
 		p = p + 2; q++;
 
 		if (((i + 1) % col)) {
-			sprintf(p, "%c", printchar(chr1));
-			sprintf(q, "%c", printchar(chr2));
-			p++; q++;
+			if (chr1) {
+				sprintf(p, "%c", chr1); p++;
+			}
+			if (chr2) {
+				sprintf(q, "%c", printchar(chr2)); q++;
+			}
 		}
 
 		if (!((i + 1) % col)) {
 			if (ascii)
-				note("%s | %s", buf1, buf2);
+				note("%08x %s | %s", oft, buf1, buf2);
 			else
-				note("%s", buf1);
+				note("%08x %s", oft, buf1);
 
 			memset(buf1, 0, col * 3);
 			memset(buf2, 0, col * 2);
 			p = buf1; q = buf2;
+			oft += col;
 		}
 	}
 
@@ -73,9 +101,9 @@ void hexdump (const void *ptr, unsigned int size) {
 		}
 
 		if (ascii)
-			note("%s | %s", buf1, buf2);
+			note("%08x %s | %s", oft, buf1, buf2);
 		else
-			note("%s", buf1);
+			note("%08x %s", oft, buf1);
 	}
 
 	free(buf1);
