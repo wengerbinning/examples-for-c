@@ -1,23 +1,34 @@
+# ifeq ($(MAKELEVEL), 0)
+# include/autoconf.h: .config
+# 	@echo "Rebuilding autoconf.h..."
+# 	@(test -d include || mkdir include)
+# 	@cat .config | ${SCRIPTS_HOME}/autconf.sh > include/autoconf.h
 
-$(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
+# autoconf: include/autoconf.h
 
-##
-all: $(mdirs) $(stlibs) $(shlibs) $(progs)
+# prepare += autoconf
+# phony += autoconf
+# endif
 
-##
-clean: FORCE $(modules-clean)
-	-rm -f *.o
-	-rm -f $(stlibs) $(shlibs) $(progs)
+all: $(prepare) $(relos) $(mods) $(stlibs) $(shlibs) $(execs)
+	@$(shell echo "# Auto Generate by make" > .target)
+	@$(if $(mods),   $(shell echo "modules:$(mods)"              >> .target))
+	@$(if $(relos),  $(shell echo "relocatable objects:$(relos)" >> .target))
+	@$(if $(stlibs), $(shell echo "static libraries:$(stlibs)"   >> .target))
+	@$(if $(shlibs), $(shell echo "shared libraries:$(shlib)"    >> .target))
+	@$(if $(execs),  $(shell echo "executable objects:$(execs)"  >> .target))
 
-##
-install: $(modules-install) $(progs) FORCE
+clean: FORCE $(mods-clean)
+	-rm -f *.o .target$(if $(stlibs), $(stlibs))$(if $(shlibs), $(shlibs))$(if $(relos), $(relos))$(if $(execs), $(execs))
+
+install: FORCE $(mods-install) $(stlibs) $(shlibs) $(relos) $(execs)
 	install -d $(DESTDIR)/$(bin)
-	install -t $(DESTDIR)/$(bin) $(progs)
+	install -t $(DESTDIR)/$(bin) $(execs)
 
-##
-unistall: $(modules-uninstall) FORCE
+unistall: $(mods-uninstall) FORCE
 	-rm -rf $(DESTDIR)/$(bin)
 
-##
-.PHONY: all clean install unistall $(mdirs) $(modules-clean) $(modules-install) $(modules-uninstall) FORCE
+help: FORCE
+
+.PHONY: FORCE all install unistall clean help $(phony) $(mdirs) $(mods-clean) $(mods-install) $(mods-uninstall)
 FORCE:
