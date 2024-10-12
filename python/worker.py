@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 import os
+import fcntl
 import subprocess
-import sys
-import os
-import time
+import threading
+
+
 
 class ExecException(Exception):
 	def __init__(self, cmd, code):
@@ -39,13 +42,15 @@ class Worker:
 		if 0 != proc.returncode:
 			raise ExecException(cmd, proc.returncode)
 
-class ProjectBuilder:
-	def __init__(self, proj, commands, verbose=False):
-		self.project = proj
-		self.commands = commands
-		self.verbose = verbose
 
-	def run(self):
-		with Worker(self.project.get("path")) as worker:
-			for cmd in self.commands:
-				worker.do(cmd)
+if __name__ == "__main__":
+	with Worker() as worker:
+
+		try:
+			worker.do("for i in $(seq 1 5); do echo OUT$i; echo OUT$i; echo ERR$i >&2; sleep 1; done")
+			worker.do("echo OUT1")
+			worker.do("cat")
+			worker.do("exit 1")
+			worker.do("echo ERR1 >&2")
+		except ExecException as err:
+			print(err)
