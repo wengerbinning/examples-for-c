@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap'); */
 
 * {
 	margin: 0;
@@ -19,7 +19,7 @@ body {
 
 /* Login Box */
 
-.box {
+.loginBox {
 	position: relative;
 	width: 380px;
 	height: 420px;
@@ -28,7 +28,7 @@ body {
 	overflow: hidden;
 }
 
-.box::before {
+.loginBox::before {
 	content: '';
 	z-index: 1;
 	position: absolute;
@@ -41,7 +41,7 @@ body {
 	animation: animate 6s linear infinite;
 }
 
-.box::after {
+.loginBox::after {
 	content: '';
 	z-index: 1;
 	position: absolute;
