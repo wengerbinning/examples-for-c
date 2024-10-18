@@ -4,7 +4,7 @@ let loginForm = document.forms["login"];
 loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const url = "/api/login";
+    const url = "/api/login.pl";
 
     let form = e.srcElement;
     let username = form.elements.namedItem("username");
