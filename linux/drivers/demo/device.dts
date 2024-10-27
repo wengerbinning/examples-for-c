@@ -1,0 +1,5 @@
+
+demo: demo@00100000 {
+    compatible = "demo,platform-v1";
+    reg = <0 0x00100000 0 0x80000>;
+}
