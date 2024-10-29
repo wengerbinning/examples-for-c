@@ -4,7 +4,7 @@ CC   ?= gcc
 
 CFLAGS := -g
 
-
+LIBS = -lhexdump
 
 all: string
 
