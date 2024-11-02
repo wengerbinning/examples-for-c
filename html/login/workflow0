@@ -1,0 +1,31 @@
+core/sqlite
+
+extra/mariadb
+extra/mariadb-clients
+extra/mariadb-lts-clients
+
+
+DB
+DBMS
+SQL
+
+关系型数据库
+MySQL, Oracle, 
+非关系型数据库
+MongoDB, Redis, Cassandra
+
+分布式数据库
+
+内存数据库
+时间序列数据库
+列式存储数据库
+云数据库
+
+
+sqlite3 user-sqllite.db
+
+create table users(name varchar(10), id smallint);
+insert into users values('helloworld',20);
+select * from users;
+
+showdb user-sqllite.db
