@@ -17,8 +17,6 @@ loginForm.addEventListener("submit", (e) => {
     console.log(username.value);
     console.log(password.value);
 
-
-    
     $.ajax({
         type: "POST",
         url: url,

@@ -1,0 +1,5 @@
+*.img.gz
+*.img
+*.bin
+vmlinuxz*
+rootfs/**

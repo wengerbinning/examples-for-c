@@ -21,7 +21,7 @@ qemu-system-x86_64 -name virtual-machine \
 ####
 
 #
-ip tuntap add vtap0 mode tap
+	ip tuntap add vtap0 mode tap
 ip addr add 192.168.1.1/24 dev vtap0
 ip link set vtap0 up
 

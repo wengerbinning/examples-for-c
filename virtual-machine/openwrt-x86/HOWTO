@@ -1,0 +1,132 @@
+
+qemu-system-i386 -name virtual-machine -nographic \
+	-smp 1 -cpu qemu64 -m 1G \
+	-kernel openwrt-x86-generic-generic-kernel.bin -append "console=ttyS0 root=/dev/vda" \
+	-drive file=openwrt-x86-generic-generic-squashfs-rootfs.img,format=raw,if=virtio
+
+qemu-system-i386 -name virtual-machine -nographic -smp 1 -cpu qemu64 -m 1G \
+	-kernel openwrt-x86-generic-generic-kernel.bin -append "console=ttyS0 root=/dev/sda" \
+	-hda openwrt-x86-generic-generic-squashfs-rootfs.img
+
+
+
+
+qemu-system-i386 -name virtual-machine -nographic \
+	-smp 1 -cpu qemu64 -m 1G \
+	-pflash flash.bin
+
+
+
+
+
+
+
+-enable-kvm -m 1G 
+
+-drive if=pflash,format=raw,readonly,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd 
+-drive if=pflash,format=raw,file=my_uefi_vars.fd
+
+qemu-system-i386 -name virtual-machine -nographic \
+	-smp 1 -cpu qemu64 -m 1G \
+	-drive if=pflash,format=raw,readonly,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd
+
+####
+
+#
+sudo ip tuntap add vtap0 mode tap
+sudo ip addr add 192.168.0.1/24 dev vtap0
+sudo ip link set vtap0 up
+
+#
+qemu-system-i386 -name virtual-machine -nographic \
+	-smp 1 -cpu qemu64 -m 1G \
+	-kernel openwrt-x86-generic-generic-kernel.bin -append "console=ttyS0 root=/dev/vda" \
+	-drive file=openwrt-x86-generic-generic-squashfs-rootfs.img,format=raw,if=virtio \
+	-net nic -net tap,ifname=vtap0,script=no
+
+#
+ip addr add 192.168.1.2/24 dev eth0
+ip link set eth0 up
+
+
+
+
+####
+qemu-system-i386 -name virtual-machine -nographic \
+	-smp 1 -cpu qemu64 -m 1G \
+	-kernel openwrt-x86-generic-generic-kernel.bin -append "console=ttyS0 root=/dev/vda" \
+	-drive file=openwrt-x86-generic-generic-squashfs-rootfs.img,format=raw,if=virtio \
+	-device virtio-net,netdev=net0 -netdev user,id=net0,net=192.168.1.0/24,hostfwd=tcp:127.0.0.1:4022-192.168.1.1:22 \
+	-device virtio-net,netdev=net1 -netdev user,id=net1,net=192.0.2.0/24
+
+
+
+#
+dhcp
+
+
+#
+sudo ip tuntap add vtap0 mode tap
+sudo ip addr add 192.168.0.1/24 dev vtap0
+sudo ip link set vtap0 up
+
+#
+sudo ip tuntap add vtap1 mode tap
+		sudo ip link set vtap1 up
+
+-net nic -net tap,ifname=vtap0,script=no
+
+
+qemu-system-mipsel -M malta \
+-hda openwrt-malta-le-root.ext4 \
+-kernel openwrt-malta-le-vmlinux.elf \
+-nographic -append "root=/dev/sda console=ttyS0"
+
+
+
+option subnet-mask 255.255.255.0;
+option routers 172.16.0.1;
+option domain-name-servers 172.16.0.1;
+subnet 172.16.0.0 netmask 255.255.255.0 {
+  range 172.16.0.100 172.16.0.199;
+}
+
+ dhcpd4.service
+
+<https://openwrt.org/docs/guide-user/virtualization/qemu>
+
+
+	qemu-system-i386 -name virtual-machine -nographic -smp 1 -cpu qemu64 -m 1G \
+		-kernel openwrt-x86-generic-generic-kernel.bin -append "console=ttyS0 root=/dev/sda" \
+		-hda openwrt-x86-generic-generic-squashfs-rootfs.img \
+		-netdev tap,id=netdev1,vhost=on,fd=6 6<>/dev/tap11 \
+		-device virtio-net-pci,id=nic1,addr=0x0a,mac=02:d6:c0:2c:ab:a1,netdev=netdev1
+
+-device 					
+			-net nic -net tap,ifname=vtap0,script=no \
+
+		-netdev user,id=wan0,net=172.16.0.0/24,dhcpstart=172.16.0.100
+
+sudo ip netns add s1
+sudo ip link set vtap1 netns s1
+sudo ip -n s1 addr add 172.16.0.1/24 dev vtap1
+sudo ip netns exec s1 ip addr
+sudo ip -n s1 link set vtap0 up 
+sudo ip -n s1 link set lo up
+sudo ip netns exec s1 systemctl status dhcpd4.service
+
+
+
+ip netns exec s1 ping baidu.com
+
+ip link add veth0 type veth peer name veth1
+	ip link add link veth1 type macvtap mode vepa
+
+
+ip netns add s2
+ip link set veth1 netns s2
+
+
+ip netns exec s1 ping 192.168.64.2
+
+ip -n s1 link set veth0 up
