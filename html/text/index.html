@@ -92,9 +92,10 @@
 		}
 
 		del() {
-			if (0 < this.length)
+			
+			if (0 < this.length) 
 				this.length --;
-
+	
 			if ((0 < this._line) && (this.length < this.offset[this._line - 1])) {
 				this._line --;
 				let offset = this.offset.slice(0, -1);
@@ -103,9 +104,7 @@
 			}
 			this.offset[this._line] = this.length;
 			this.line = this._line + 1;
-		}
-
-		
+			}
 	}
 
 	// console.log(window);
@@ -142,12 +141,13 @@
 				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
 				break;
 			case "insertLineBreak":
-				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
 				text.add(true);
+				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
 				break;
 			case "deleteContentBackward":
-				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
 				text.del();
+				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
+				
 				break;
 			default:
 				console.log(e);
