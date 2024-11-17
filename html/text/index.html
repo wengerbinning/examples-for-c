@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8"/>
+<title>HTML Labs</title>
+
+<style>
+	* {
+		background: #666666;
+	}
+
+	.div_index {
+		background: #ffffaa;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		
+		/*  */
+		width: calc(100% - 44px);
+		height: calc(100% - 44px);
+
+		/*  */
+		margin: auto;
+		border: 2px solid black;
+		padding:20px;
+
+		/*  */
+		display: flex;
+		flex-flow: row nowrap;
+	}
+
+
+	.div_textarea {
+		background: #ff55ff;
+		width: 100%;
+		height: 100%;
+
+		border: 1px solid black;
+		padding: 0;
+	}
+	.textarea {
+		background: #ffffff;
+
+		width:  calc(100%);
+		height: calc(100%);
+		resize: none;
+		margin: 0;
+		border: 0;
+		padding: 0;
+	}
+
+
+	#textarea_0 {
+		font-family: Monospace;
+		font-size: large;
+		/* color: #ff55ff; */
+	}
+</style>
+</head>
+
+
+<body>
+	<div class="div_index">
+		<div class="div_textarea">
+			<textarea class="textarea" id="textarea_0" name="demo" wrap="soft" placeholder="Please input your text ..."></textarea>
+		</div>
+	</div>
+</body>
+
+
+<script>
+
+	class Text {
+		constructor() {
+			this._line = 0;
+
+			this.length = 0;
+			this.offset = [0];
+			this.line = this._line + 1;
+		}
+
+		add(lr) {
+			this.length++;
+			this.offset[this._line] = this.length;
+			if (lr) {
+				this._line ++;
+				this.offset[this._line] = this.length;
+			}
+			this.line = this._line + 1;
+		}
+
+		del() {
+			if (0 < this.length)
+				this.length --;
+
+			if ((0 < this._line) && (this.length < this.offset[this._line - 1])) {
+				this._line --;
+				let offset = this.offset.slice(0, -1);
+				delete this.offset;
+				this.offset = offset;
+			}
+			this.offset[this._line] = this.length;
+			this.line = this._line + 1;
+		}
+
+		
+	}
+
+	// console.log(window);
+	// console.log(document);
+
+	let head = document.getElementsByTagName("head")[0]
+	let body = document.getElementsByTagName("body")[0];
+	let text = new Text();
+
+	// 
+	body.addEventListener("onresize", (e) => {
+		e.preventDefault();
+		console.log("running in here");
+	})
+
+	// 
+	let textarea = document.getElementsByClassName("textarea")[0];
+
+	textarea.addEventListener("select", (e) => {
+		let textarea = e.target;
+		const text = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+		console.log(text);
+
+		e.preventDefault();
+	})
+
+	textarea.addEventListener("input", (e) => {
+		e.preventDefault();
+
+		let textarea = e.target;
+		switch(e.inputType) {
+			case "insertText":
+				text.add(false);
+				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
+				break;
+			case "insertLineBreak":
+				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
+				text.add(true);
+				break;
+			case "deleteContentBackward":
+				console.log("length: " + text.length, "line: " + text.line, "offset:"+ text.offset);
+				text.del();
+				break;
+			default:
+				console.log(e);
+		}
+
+		
+	})
+
+</script>
+
+</html>
