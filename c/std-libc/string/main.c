@@ -5,6 +5,10 @@
 
 
 
+
+
+
+
 int main (int argc, char *argv[]) {
     char *str;
 
@@ -15,7 +19,14 @@ int main (int argc, char *argv[]) {
     STR2LOWER(str);
     printf("LOWERS: %s\n", str);
 
+if ('/' == *(str + strlen(str) - 1)) {
+        *(str + strlen(str) - 1) = 0x0;
+    }
+
     hexdump(str, strlen(str));
+
+
+
 
     hexdump(str + strlen(str), 1);
 
