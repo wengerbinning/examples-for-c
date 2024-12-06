@@ -3,8 +3,6 @@
 **/*.a
 **/*.so
 
-helloworld
-
 .var
 .target
 .environment

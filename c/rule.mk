@@ -43,19 +43,17 @@ etc		?= $(prefix)/etc
 # this section specificies the build variables required for the module. If you
 # need debug, you can analyze it by printing these variables.
 
-mods          :=
-mod-cflags    :=
-mod-cxxflags  :=
-mod-cppflags  :=
-mod-ldflags   :=
-mod-libs      :=
+mod-cflags   :=
+mod-cxxflags :=
+mod-cppflags :=
+mod-ldflags  :=
+mod-libs     :=
 
 ## Project Build  Share Library Variables
 # (No need to specify automatically generated the build framework.)
 # This section specifices the build variables required for the share library.
 # If you need debug, you can analyze it byu printing these variables.
 
-shlibs          :=
 shlib-cflags    :=
 shlib-cxxflags  :=
 shlib-cppflags  :=
@@ -67,7 +65,6 @@ shlib-libs      :=
 # This section specifices the build variables required for the static library.
 # If you need debug, you can analyze it byu printing these variables.
 
-stlibs          :=
 stlib-cflags    :=
 stlib-cxxflags  :=
 stlib-cppflags  :=
@@ -79,7 +76,6 @@ stlib-libs      :=
 # This section specifices the build variables required for the relocatable
 # object. If you need debug, you can analyze it byu printing these variables.
 
-relos          :=
 relo-cflags    :=
 relo-cxxflags  :=
 relo-cppflags  :=
@@ -91,7 +87,6 @@ relo-libs      :=
 # This section specifices the build variables required for the executable
 # object. If you need debug, you can analyze it byu printing these variables.
 
-execs          :=
 exec-cflags    :=
 exec-cxxflags  :=
 exec-cppflags  :=
@@ -99,19 +94,32 @@ exec-ldflags   :=
 exec-libs      :=
 
 ## Project Build Target Variables
+# (No need to specify automatically generated the build framework.)
 
-objs     :=
-cflags   :=
-cxxflags :=
-cppflags :=
-ldflags  :=
-libs     :=
+mods           :=
+mods-install   :=
+mods-uninstall :=
+mods-clean     :=
+shlibs         :=
+stlibs         :=
+relos          :=
+execs          :=
+
+cflags    :=
+cxxflags  :=
+cppflags  :=
+ldflags   :=
+objs      :=
+relo-objs :=
+libs      :=
+flags1    :=
+flags2    :=
+
 
 
 # =========================================================================== #
 
 export TOPDIR
-
 SCRIPTS_HOME :=$(TOPDIR)/scripts
 CURDIR=$(PWD)
 
@@ -143,24 +151,25 @@ define module_perpare
   mods-uninstall += $(strip $(1))-uninstall
   mods-clean += $(strip $(1))-clean
   $(eval $(call module_perpare_variables, $(1)))
-  makeflags := --no-print-directory
-  makeflags += MOD_NAME="$(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1))"
-  flags := MODS="$(mods)" CPPFLAGS="$(cppflags)" LDFLAGS="$(ldflags)"
+  
+  flags1 := --no-print-directory
+  flags1 += MOD_NAME="$(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1))"
+  flags2 := MODS="$(mods)" CPPFLAGS="$(cppflags)" LDFLAGS="$(ldflags)"
 endef
 # usage: module_build <mod>
 define module_build
 $(strip $(1)): FORCE
 	$(call log, info, MAKE, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(makeflags), $(makeflags)) -C $$@ $(flags)
+	@$(MAKE)$(if $(flags1), $(flags1)) -C $$@ $(flags2)
 $(strip $(1))-install:
 	$(call log, info, INSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(makeflags), $(makeflags)) install -C $(strip $(1))
+	@$(MAKE)$(if $(flags1), $(flags1)) install -C $(strip $(1))
 $(strip $(1))-uninstall:
 	$(call log, info, UNINSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(makeflags), $(makeflags)) uninstall -C $(strip $(1))
+	@$(MAKE)$(if $(flags1), $(flags1)) uninstall -C $(strip $(1))
 $(strip $(1))-clean:
 	$(call log, info, CLEAN, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(makeflags), $(makeflags)) clean -C $(strip $(1))
+	@$(MAKE)$(if $(flags1), $(flags2)) clean -C $(strip $(1))
 endef
 # usage: module_target <mod> <target>
 define module_target
@@ -218,7 +227,7 @@ define library_static_perpare_variables
   ldflags := $(if $(LDFLAGS), $(LDFLAGS))
   ldflags += $(if $(stlib-ldflags), $(stlib-ldflags))
   ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
- 
+
   objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
   libs := $(if $(LIBS), $(LIBS))
   libs += $(if $(stlib-libs), $(stlib-libs))
@@ -308,11 +317,11 @@ define object_executable_perpare_variables
   ldflags += $(if $(exec-ldflags), $(exec-ldflags))
   ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
   
-  objs  := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+  objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+  relo-objs := $(foreach mod, $(mods),$$(call module_target,$(mod), relos))
   libs := $(if $(LIBS), $(LIBS))$(if $(mod-libs), $(mod-libs))
   libs += $(if $(exec-libs), $(exec-libs))
   libs += $(if $($(strip $(1))-libs), $($(strip $(1))-libs))
-  mod-objs := $(foreach mod, $(mods),$$(call module_target,$(mod), relos))
 endef
 # usage: object_executable_perpare <target>
 define object_executable_perpare
@@ -321,7 +330,7 @@ define object_executable_perpare
   flags1 := -c
   flags1 += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
   flags2 := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
-  link := $(objs)$(if $(mod-objs), $(mod-objs))$(if $(libs), $(libs))
+  link := $(objs)$(if $(relo-objs), $(relo-objs))$(if $(libs), $(libs))
 endef
 
 # usage: object_executable_build <target>
@@ -329,7 +338,7 @@ define object_executable_build
 $(objs): %.o: %.c
 	$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC) $(if $(flags1), $(flags1)) $$<
-$(1): $(objs) $(mod-objs)
+$(1): $(objs) $(relo-objs)
 	$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC)$(if $(flags2), $(flags2)) -o $$@ $(if $(link), $(link)) 
 endef
