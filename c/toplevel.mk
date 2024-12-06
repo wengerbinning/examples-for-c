@@ -23,12 +23,14 @@ clean: FORCE $(mods-clean)
 
 install: FORCE $(mods-install) $(stlibs) $(shlibs) $(relos) $(execs)
 	install -d $(DESTDIR)/$(bin)
-	install -t $(DESTDIR)/$(bin) $(execs)
+	$(foreach file,$(execs), install -t $(DESTDIR)/$(bin) $(file))
 
-unistall: $(mods-uninstall) FORCE
-	-rm -rf $(DESTDIR)/$(bin)
+uninstall: $(mods-uninstall) FORCE
+	-$(foreach file, $(execs), rm -f $(DESTDIR)/$(bin)/$(file))
+	-$(foreach file,$(shlibs), rm -f $(DESTDIR)/$(lib)/$(file))
 
 help: FORCE
+	@$(SCRIPTS_HOME)/build-help.sh
 
 .PHONY: FORCE all install unistall clean help $(phony) $(mdirs) $(mods-clean) $(mods-install) $(mods-uninstall)
 FORCE:

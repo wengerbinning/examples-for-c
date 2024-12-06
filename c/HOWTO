@@ -1,2 +1,0 @@
-
-socat UNIX-CONNECT:server.sock -

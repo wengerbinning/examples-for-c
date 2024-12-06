@@ -1,1 +1,50 @@
-make -j$(nproc)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+object
+------
+
+```
+$(eval $(call build, object, relocatable, helloworld))
+```
+
+```
+$(eval $(call build, object, executable, helloworld))
+```
+
+
+library
+-------
+
+
+```
+$(eval $(call build, library, share, helloworld))
+```
+
+```
+$(eval $(call build, library, static, helloworld))
+```
+
+
+module
+------
+
+```
+$(eval $(call build, module, heloworld))
+```
+
+```
+mdirs :=  std-libc
+$(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
+```
