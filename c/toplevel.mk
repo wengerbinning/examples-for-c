@@ -30,7 +30,7 @@ uninstall: $(mods-uninstall) FORCE
 	-$(foreach file,$(shlibs), rm -f $(DESTDIR)/$(lib)/$(file))
 
 help: FORCE
-	@$(SCRIPTS_HOME)/build-help.sh
+	@$(SCRIPTS_HOME)/build-help.sh $(mods) $(stlibs)
 
 .PHONY: FORCE all install unistall clean help $(phony) $(mdirs) $(mods-clean) $(mods-install) $(mods-uninstall)
 FORCE:
