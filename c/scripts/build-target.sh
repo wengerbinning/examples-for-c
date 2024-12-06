@@ -1,39 +1,33 @@
 #!/usr/bin/env bash
 
+MOD_PATH=0
 MOD_MAX_PATH=4
 
-# usage: mod_target <mod> <target>...
-mod_target() {
-	local mod dep target val _val var each
-	local mods relos execs stlibs shlibs
-	mod=$1; dep=$2; shift 2
-	[ ${dep:-0} -lt ${MOD_MAX_PATH:-4} ] || return
-	test -f "${mod}/.target" && target=$(cat ${mod}/.target)
-	[ -n "$target" ] || return
-	mods=$(echo "$target" | sed -nre 's/modules:(.*)/\1/p')
-	for var in "$@"; do unset val _val
-		case $var in
-		relos)
-			_val=$(echo "$target" | sed -nre 's/relocatable objects:(.*)/\1/p')
-			for each in $_val; do val="${val:+$val }${mod}/${each}"; done
-		;;
-		execs)
-			_val=$(echo "$target" | sed -nre 's/executable objects:(.*)/\1/p')
-			for each in $_val; do val="${val:+$val }${mod}/${each}"; done
-		;;
-		stlibs)
-			_val=$(echo "$target" | sed -nre 's/static libraries:(.*)/\1/p')
-			for each in $_val; do val="${val:+$val }${mod}/${each}"; done
-		;;
-		shlibs)
-			_val=$(echo "$target" | sed -nre 's/shared libraries:(.*)/\1/p')
-			for each in $_val; do val="${val:+$val }${mod}/${each}"; done
-		;;
-		esac
-		for _mod in ${mods}; do val=${val:+$val }$(mod_target $mod/$_mod $((dep + 1)) $var); done
-		[ -n "$val" ] && echo "$val"
+SCRIPT_HOME=$(dirname ${BASH_SOURCE})
+TARGET_AWK=$SCRIPT_HOME/target.awk
+
+target_awk() {
+	local target=$1; shift
+	for path in $@; do path=${path%/}
+		test -e $path/.target || continue
+		awk -v home=$path -v target=$target -f $TARGET_AWK $path/.target
 	done
 }
 
-mod=$1; shift
-mod_target $mod 0 "$@"
+# usage: target_get <target> <dirs>...
+target_get() {
+	local target=$1; shift
+	local targets
+	MOD_PATH=$((MOD_PATH + 1))
+	if [ $MOD_PATH -gt $MOD_MAX_PATH ]; then return; fi
+	mods=$(target_awk mods $@)
+	# echo "$MOD_PATH {$@} @" $mods >> result
+	if [ -n "$mods" ]; then
+		targets=${targets:+$targets }$(target_get $target $mods)
+	fi
+	targets=${targets:+$targets }$(target_awk $target $@)
+	MOD_PATH=$((MOD_PATH - 1))
+	echo $targets
+}
+
+target_get "$@"

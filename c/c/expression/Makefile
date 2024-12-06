@@ -1,13 +1,14 @@
 
 TOPDIR ?= $(CURDIR)
 
-
 include $(TOPDIR)/rule.mk
 # =========================================================================== #
 
-string-objs := mac_address.o
+# mdirs := std-libc version
+# $(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
 
-# $(eval $(call build, object, relocatable, string))
+
+$(eval $(call build, object, executable, main))
 
 # =========================================================================== #
 include $(TOPDIR)/toplevel.mk

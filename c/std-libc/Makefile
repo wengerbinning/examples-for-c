@@ -5,7 +5,7 @@ TOPDIR ?= $(CURDIR)
 include $(TOPDIR)/rule.mk
 # =========================================================================== #
 
-mdirs :=  hexdump
+mdirs :=  hexdump string
 $(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
 
 # =========================================================================== #

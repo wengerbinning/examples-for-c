@@ -38,97 +38,123 @@ include ?= $(prefix)/include
 share	?= $(prefix)/share
 etc		?= $(prefix)/etc
 
-## Porject Build Module Variables
-# (No need to specify automatically generated the build framework.)
-# this section specificies the build variables required for the module. If you
+## Porject Build Module Parameters
+# this section specificies the build parameters required for the module. If you
 # need debug, you can analyze it by printing these variables.
 
-mod-cflags   :=
-mod-cxxflags :=
-mod-cppflags :=
-mod-ldflags  :=
-mod-libs     :=
+mod-cflags   ?=
+mod-cxxflags ?=
+mod-cppflags ?=
+mod-ldflags  ?=
+mod-libs     ?=
 
-## Project Build  Share Library Variables
-# (No need to specify automatically generated the build framework.)
-# This section specifices the build variables required for the share library.
+## Project Build  Share Library Parameters
+# This section specifices the build parameters required for the share library.
 # If you need debug, you can analyze it byu printing these variables.
 
-shlib-cflags    :=
-shlib-cxxflags  :=
-shlib-cppflags  :=
-shlib-ldflags   :=
-shlib-libs      :=
+shlib-cflags    ?=
+shlib-cxxflags  ?=
+shlib-cppflags  ?=
+shlib-ldflags   ?=
+shlib-libs      ?=
 
-## Project Build Static Library Variables
-# (No need to specify automatically generated the build framework.)
-# This section specifices the build variables required for the static library.
+## Project Build Static Library Parameters
+# This section specifices the build parameters required for the static library.
 # If you need debug, you can analyze it byu printing these variables.
 
-stlib-cflags    :=
-stlib-cxxflags  :=
-stlib-cppflags  :=
-stlib-ldflags   :=
-stlib-libs      :=
+stlib-cflags    ?=
+stlib-cxxflags  ?=
+stlib-cppflags  ?=
+stlib-ldflags   ?=
+stlib-libs      ?=
 
-## Project Build Relocatable Object Variables
-# (No need to specify automatically generated the build framework.)
-# This section specifices the build variables required for the relocatable
+## Project Build Relocatable Object Parameters
+# This section specifices the build parameters required for the relocatable
 # object. If you need debug, you can analyze it byu printing these variables.
 
-relo-cflags    :=
-relo-cxxflags  :=
-relo-cppflags  :=
-relo-ldflags   :=
-relo-libs      :=
+relo-cflags    ?=
+relo-cxxflags  ?=
+relo-cppflags  ?=
+relo-ldflags   ?=
+relo-libs      ?=
 
-## Project Build Executable Object Variables
-# (No need to specify automatically generated the build framework.)
-# This section specifices the build variables required for the executable
+## Project Build Executable Object Parameters
+# This section specifices the build parameters required for the executable
 # object. If you need debug, you can analyze it byu printing these variables.
 
-exec-cflags    :=
-exec-cxxflags  :=
-exec-cppflags  :=
-exec-ldflags   :=
-exec-libs      :=
+exec-cflags    ?=
+exec-cxxflags  ?=
+exec-cppflags  ?=
+exec-ldflags   ?=
+exec-libs      ?=
 
-## Project Build Target Variables
+# =========================================================================== #
+
+export TOPDIR
+CURDIR=$(PWD)
+SCRIPTS_HOME  ?=$(TOPDIR)/scripts
+
+SCRIPT_TARGET := $(SCRIPTS_HOME)/build-target.sh
+SCRIPT_HELP   := $(SCRIPTS_HOME)/build-help.sh
+
+all:
+
+## Build Target Variables
 # (No need to specify automatically generated the build framework.)
-
-mods           :=
-mods-install   :=
-mods-uninstall :=
-mods-clean     :=
-shlibs         :=
-stlibs         :=
-relos          :=
-execs          :=
 
 cflags    :=
 cxxflags  :=
 cppflags  :=
 ldflags   :=
 objs      :=
-relo-objs :=
+mods-objs :=
 libs      :=
+mods-libs :=
 flags1    :=
 flags2    :=
 
+## Build Project Variables
+# (No need to specify automatically generated the build framework.)
 
+shlibs         :=
+stlibs         :=
+relos          :=
+execs          :=
+mods           :=
+mods-install   :=
+mods-uninstall :=
+mods-clean     :=
 
 # =========================================================================== #
 
-export TOPDIR
-SCRIPTS_HOME :=$(TOPDIR)/scripts
-CURDIR=$(PWD)
-
-all:
-
-# =========================================================================== #
-
+# usage: log <level> <message>
 define log
-@echo -en "\e[32m[$(strip $(2))] \e[0m"; echo $(strip $(3))
+case $1 in \
+  error)  echo -en "\e[31m[$(strip $(2))] \e[0m"; echo $(strip $(3)) ;; \
+  info)   echo -en "\e[32m[$(strip $(2))] \e[0m"; echo $(strip $(3)) ;; \
+  notice) echo -en "\e[33m[$(strip $(2))] \e[0m"; echo $(strip $(3)) ;; \
+esac
+endef
+
+#usage: target <file>
+define target_prepare
+@ echo "# Auto Generate by Build Framework" > $1
+endef
+
+# usage: target <type> <list> <file>
+define target_push
+  case $1 in \
+    relos)  for each in $2; do echo $${each}    >> $3; done ;; \
+    mods)   for each in $2; do echo $${each}'/' >> $3; done ;; \
+    stlibs) for each in $2; do echo $${each}    >> $3; done ;; \
+    shlibs) for each in $2; do echo $${each}    >> $3; done ;; \
+    execs)  for each in $2; do echo $${each}'*' >> $3; done ;; \
+  esac
+endef 
+
+# usage: target_pull <target> <mods>
+define target_pull
+  $(shell $(SCRIPTS_HOME)/build-target.sh $1 $2)
 endef
 
 # =========================================================================== #
@@ -159,21 +185,22 @@ endef
 # usage: module_build <mod>
 define module_build
 $(strip $(1)): FORCE
-	$(call log, info, MAKE, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
+	@$(call log, notice, MAKE, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
 	@$(MAKE)$(if $(flags1), $(flags1)) -C $$@ $(flags2)
 $(strip $(1))-install:
-	$(call log, info, INSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
+	@$(call log, notice, INSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
 	@$(MAKE)$(if $(flags1), $(flags1)) install -C $(strip $(1))
 $(strip $(1))-uninstall:
-	$(call log, info, UNINSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
+	@$(call log, notice, UNINSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
 	@$(MAKE)$(if $(flags1), $(flags1)) uninstall -C $(strip $(1))
 $(strip $(1))-clean:
-	$(call log, info, CLEAN, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(flags1), $(flags2)) clean -C $(strip $(1))
+	@$(call log, notice, CLEAN, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
+	@$(MAKE)$(if $(flags1), $(flags1)) clean -C $(strip $(1))
 endef
-# usage: module_target <mod> <target>
+
+# usage: module_target <target> <path>...
 define module_target
-  $$(shell $(SCRIPTS_HOME)/build-target.sh $1 $2)
+$$(shell $(SCRIPTS_HOME)/build-target.sh $1 $2)
 endef
 
 # =========================================================================== #
@@ -209,10 +236,10 @@ endef
 # usage: library_share_build <target>
 define library_share_build
 $(objs): %.o: %.c
-	$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC)$(if $(flags1), $(flags1)) $$<
 lib$(strip $(1)).so: $(objs)
-	$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC)$(if $(flags2), $(flags2)) -shared -o $$@ $$^$(if $(libs), $(libs))
 endef
 
@@ -245,10 +272,10 @@ endef
 # usage: library_static_build <target>
 define library_static_build
 $(objs): %.o: %.c
-	$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC)$(if $(flags1), $(flags1)) $$<
 lib$(strip $(1)).a: $(objs)
-	$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(AR) crv $$@ $$^ >/dev/null
 endef
 
@@ -296,10 +323,10 @@ endef
 # usage: object_relocatable_build <taregt>
 define object_relocatable_build
 $(objs): %.o: %.c
-	$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC) -c$(if $(flags1), $(flags1)) $$<
 $(strip $(1)).o: $(objs)
-	$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(LD) --no-gc-sections -o $$@ -r $$^
 endef
 
@@ -318,10 +345,12 @@ define object_executable_perpare_variables
   ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
   
   objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
-  relo-objs := $(foreach mod, $(mods),$$(call module_target,$(mod), relos))
   libs := $(if $(LIBS), $(LIBS))$(if $(mod-libs), $(mod-libs))
   libs += $(if $(exec-libs), $(exec-libs))
   libs += $(if $($(strip $(1))-libs), $($(strip $(1))-libs))
+  mods-objs := $(if $(mods),$$(call module_target,relos, $(mods)))
+  mods-libs := $(if $(mods), $$(call module_target, shlibs, $(mods)))
+  mods-libs += $(if $(mods), $$(call module_target, stlibs, $(mods)))
 endef
 # usage: object_executable_perpare <target>
 define object_executable_perpare
@@ -330,17 +359,20 @@ define object_executable_perpare
   flags1 := -c
   flags1 += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
   flags2 := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
-  link := $(objs)$(if $(relo-objs), $(relo-objs))$(if $(libs), $(libs))
+  link := $(objs)$(if $(relos), $(relos))
+  link += $(if $$(mods-objs), $$(mods-objs))
+  link += $(if $(libs), $(libs))
+  link += $(if $$(mods-libs), $$(mods-libs))
 endef
 
 # usage: object_executable_build <target>
 define object_executable_build
 $(objs): %.o: %.c
-	$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
+	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC) $(if $(flags1), $(flags1)) $$<
 $(1): $(objs) $(relo-objs)
-	$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(CC)$(if $(flags2), $(flags2)) -o $$@ $(if $(link), $(link)) 
+	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@ $(mods-libs))
+	$(CC)$(if $(flags2), $(flags2)) -o $$@$(if $(link), $(link))
 endef
 
 ## Build Object

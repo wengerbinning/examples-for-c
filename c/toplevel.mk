@@ -11,12 +11,12 @@
 # endif
 
 all: $(prepare) $(relos) $(mods) $(stlibs) $(shlibs) $(execs)
-	@$(shell echo "# Auto Generate by make" > .target)
-	@$(if $(mods),   $(shell echo "modules:$(mods)"              >> .target))
-	@$(if $(relos),  $(shell echo "relocatable objects:$(relos)" >> .target))
-	@$(if $(stlibs), $(shell echo "static libraries:$(stlibs)"   >> .target))
-	@$(if $(shlibs), $(shell echo "shared libraries:$(shlib)"    >> .target))
-	@$(if $(execs),  $(shell echo "executable objects:$(execs)"  >> .target))
+	@$(call target_prepare, .target)
+	@$(if $(relos),  $(call target_push, relos,  $(relos),  .target))
+	@$(if $(mods),   $(call target_push, mods,   $(mods),   .target))
+	@$(if $(stlibs), $(call target_push, stlibs, $(stlibs), .target))
+	@$(if $(shlibs), $(call target_push, shlibs, $(shlibs), .target))
+	@$(if $(execs),  $(call target_push, execs,  $(execs),  .target))
 
 clean: FORCE $(mods-clean)
 	-rm -f *.o .target$(if $(stlibs), $(stlibs))$(if $(shlibs), $(shlibs))$(if $(relos), $(relos))$(if $(execs), $(execs))

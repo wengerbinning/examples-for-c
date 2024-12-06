@@ -1,8 +1,12 @@
+TOPDIR ?= $(CURDIR)
 include $(TOPDIR)/rule.mk
+# =========================================================================== #
 
-hdirs := include
+builtin-objs := version.o
 
-##
-$(eval $(call build, library, static, version))
+$(eval $(call build, object, relocatable, builtin))
 
+$(eval $(call build, object, executable, main))
+
+# =========================================================================== #
 include $(TOPDIR)/toplevel.mk

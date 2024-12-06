@@ -1,13 +1,12 @@
 
 TOPDIR ?= $(CURDIR)
 
-
 include $(TOPDIR)/rule.mk
 # =========================================================================== #
 
-string-objs := mac_address.o
+CFLAGS := -std=c99
 
-# $(eval $(call build, object, relocatable, string))
+$(eval $(call build, object, executable, main))
 
 # =========================================================================== #
 include $(TOPDIR)/toplevel.mk
