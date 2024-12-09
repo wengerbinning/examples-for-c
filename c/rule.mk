@@ -150,7 +150,7 @@ define target_push
     shlibs) for each in $2; do echo $${each}    >> $3; done ;; \
     execs)  for each in $2; do echo $${each}'*' >> $3; done ;; \
   esac
-endef 
+endef
 
 # usage: target_pull <target> <mods>
 define target_pull
@@ -177,7 +177,7 @@ define module_perpare
   mods-uninstall += $(strip $(1))-uninstall
   mods-clean += $(strip $(1))-clean
   $(eval $(call module_perpare_variables, $(1)))
-  
+
   flags1 := --no-print-directory
   flags1 += MOD_NAME="$(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1))"
   flags2 := MODS="$(mods)" CPPFLAGS="$(cppflags)" LDFLAGS="$(ldflags)"
@@ -218,7 +218,7 @@ define library_share_perpare_varibales
   ldflags := $(if $(LDFLAGS), $(LDFLAGS))
   ldflags += $(if $(shlib-ldflags), $(shlib-ldflags))
   ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
- 
+
   objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
   libs := $(if $(LIBS), $(LIBS))
   libs += $(if $(shlib-libs), $(shlib-libs))
@@ -343,7 +343,7 @@ define object_executable_perpare_variables
   ldflags += $(if $(mod-ldflags), $(mod-ldflags))
   ldflags += $(if $(exec-ldflags), $(exec-ldflags))
   ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
-  
+
   objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
   libs := $(if $(LIBS), $(LIBS))$(if $(mod-libs), $(mod-libs))
   libs += $(if $(exec-libs), $(exec-libs))
@@ -367,12 +367,12 @@ endef
 
 # usage: object_executable_build <target>
 define object_executable_build
-$(objs): %.o: %.c
+$(objs): %.o: %.c FORCE
 	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(CC) $(if $(flags1), $(flags1)) $$<
 $(1): $(objs) $(relo-objs)
 	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@ $(mods-libs))
-	$(CC)$(if $(flags2), $(flags2)) -o $$@$(if $(link), $(link))
+	@$(CC)$(if $(flags2), $(flags2)) -o $$@$(if $(link), $(link))
 endef
 
 ## Build Object

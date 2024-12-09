@@ -1,12 +1,20 @@
 
 TOPDIR ?= $(CURDIR)
 
-
 include $(TOPDIR)/rule.mk
 # =========================================================================== #
 
-mdirs :=  hexdump string stream
-$(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
+istream-objs := main.o
+istream-objs += hexdump.o
+
+$(eval $(call build, object, executable, istream))
+
+ostream-objs := main.o
+ostream-objs += hexdump.o
+
+
+$(eval $(call build, object, executable, ostream))
+
 
 # =========================================================================== #
 include $(TOPDIR)/toplevel.mk
