@@ -1,8 +1,10 @@
 **/a.out
 **/*.o
 **/*.a
-**/*.so
+**/*.so.*
 
 .var
 .target
 .environment
+
+dest/**

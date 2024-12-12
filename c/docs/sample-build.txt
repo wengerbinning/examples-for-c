@@ -1,0 +1,45 @@
+
+- rule.mk
+- toplevel.mk
+- scripts/build-help.sh*
+- scripts/build-target.sh*
+
+
+$(target)-cflags
+$(target)-cxxflags
+$(target)-cppflags
+$(target)-ldflags
+
+$(target)-objs
+$(target)-libs
+
+$(eval $(call build, object, relocatable, helloworld))
+
+$(eval $(call build, object, executable, helloworld))
+
+$(eval $(call build, library, share, helloworld))
+
+$(eval $(call build, library, static, helloworld))
+
+$(eval $(call build, module, heloworld))
+
+
+
+
+features:
+
+mods, libs, objs
+
+
+- 构建目标支持:可链接文件/可执行文件/静态库文件/动态库文件/模块.
+- 构建目标可指定 cflags, cxxflags, cppflags, ldflags, objs, libs, dirs 参数;
+- 构建目标
+
+
+issues:
+
+-
+
+demands:
+
+

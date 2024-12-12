@@ -19,7 +19,12 @@ all: $(prepare) $(relos) $(mods) $(stlibs) $(shlibs) $(execs)
 	@$(if $(execs),  $(call target_push, execs,  $(execs),  .target))
 
 clean: FORCE $(mods-clean)
-	-rm -f *.o .target$(if $(stlibs), $(stlibs))$(if $(shlibs), $(shlibs))$(if $(relos), $(relos))$(if $(execs), $(execs))
+	-rm -f *.o .target
+	-$(if $(stlibs), rm -f $(stlibs))
+	-$(if $(shlibs), rm -f $(shlibs))
+	-$(if $(relos),  rm -f $(relos))
+	-$(if $(execs),  rm -f $(execs))
+	-rm -rf dest
 
 install: FORCE $(mods-install) $(stlibs) $(shlibs) $(relos) $(execs)
 	install -d $(DESTDIR)/$(bin)
