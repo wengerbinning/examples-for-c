@@ -159,6 +159,8 @@ endef
 
 # =========================================================================== #
 
+# =========================================================================== #
+
 ## Build Module
 # =============
 
@@ -169,35 +171,35 @@ define module_perpare_variables
   cppflags += $(if $(CPPFLAGS), $(CPPFLAGS))
   ldflags := -L$(TOPDIR)$(if $(MOD_NAME),/$(MOD_NAME))
   ldflags += $(if $(LDFLAGS), $(LDFLAGS))
+  dirs := $(if $($(target)-dirs), $($(target)-dirs), $(target))
 endef
 # usage: module_perpare <mod>
 define module_perpare
-  mods += $(strip $(1))
-  mods-install += $(strip $(1))-install
-  mods-uninstall += $(strip $(1))-uninstall
-  mods-clean += $(strip $(1))-clean
-  $(eval $(call module_perpare_variables, $(1)))
+  mods += $(target)
+  mods-install += $(target)-install
+  mods-uninstall += $(target)-uninstall
+  mods-clean += $(target)-clean
 
-  flags1 := --no-print-directory
-  flags1 += MOD_NAME="$(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1))"
-  flags2 := MODS="$(mods)" CPPFLAGS="$(cppflags)" LDFLAGS="$(ldflags)"
+  $(eval $(call module_perpare_variables, $(1)))
+  makeflags := --no-print-directory
+  makeflags += MOD_NAME="$(if $(MOD_NAME),$(MOD_NAME)/)$(target)"
+  buildflags := MODS="$(mods)" CPPFLAGS="$(cppflags)" LDFLAGS="$(ldflags)"
 endef
 # usage: module_build <mod>
 define module_build
 $(strip $(1)): FORCE
-	@$(call log, notice, MAKE, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(flags1), $(flags1)) -C $$@ $(flags2)
+	@$(call log, notice, MAKE, $(if $(MOD_NAME),$(MOD_NAME)/)$(target))
+	@$(MAKE)$(if $(makeflags), $(makeflags)) -C $(target) $(buildflags)
 $(strip $(1))-install:
-	@$(call log, notice, INSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(flags1), $(flags1)) install -C $(strip $(1))
+	@$(call log, notice, INSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(target))
+	@$(MAKE)$(if $(makeflags), $(makeflags)) install -C $(target)
 $(strip $(1))-uninstall:
-	@$(call log, notice, UNINSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(flags1), $(flags1)) uninstall -C $(strip $(1))
+	@$(call log, notice, UNINSTALL, $(if $(MOD_NAME),$(MOD_NAME)/)$(target))
+	@$(MAKE)$(if $(makeflags), $(makeflags)) uninstall -C $(target)
 $(strip $(1))-clean:
-	@$(call log, notice, CLEAN, $(if $(MOD_NAME),$(MOD_NAME)/)$(strip $(1)))
-	@$(MAKE)$(if $(flags1), $(flags1)) clean -C $(strip $(1))
+	@$(call log, notice, CLEAN, $(if $(MOD_NAME),$(MOD_NAME)/)$(target))
+	@$(MAKE)$(if $(makeflags), $(makeflags)) clean -C $(target)
 endef
-
 # usage: module_target <target> <path>...
 define module_target
 $$(shell $(SCRIPTS_HOME)/build-target.sh $1 $2)
@@ -210,70 +212,72 @@ define library_share_perpare_varibales
   cflags := -fPIC
   cflags += $(if $(CFLAGS), $(CFLAGS))
   cflags += $(if $(shlib-cflags), $(shlib-cflags))
-  cflags += $(if $($(strip $(1))-cflags), $($(strip $(1))-cflags))
+  cflags += $(if $($(target)-cflags), $($(target)-cflags))
   cppflags := -Iinclude
   cppflags += $(if $(CPPFLAGS), $(CPPFLAGS))
   cppflags += $(if $(shlib-cppflags), $(shlib-cppflags))
-  cppflags += $(if $($(strip $(1))-cppflags), $($(strip $(1))-cppflags))
+  cppflags += $(if $($(target)-cppflags), $($(target)-cppflags))
   ldflags := $(if $(LDFLAGS), $(LDFLAGS))
   ldflags += $(if $(shlib-ldflags), $(shlib-ldflags))
-  ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
+  ldflags += $(if $($(target)-ldflags), $($(target)-ldflags))
 
-  objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+  objs := $(if $($(target)-objs), $($(target)-objs), $(target).o)
   libs := $(if $(LIBS), $(LIBS))
   libs += $(if $(shlib-libs), $(shlib-libs))
-  libs += $(if $($(strip $(1))-libs), $($(strip $(1))-libs))
+  libs += $(if $($(target)-libs), $($(target)-libs))
 endef
 # usage: library_share_perpare <target>
 define library_share_perpare
-  shlibs += lib$(strip $(1)).so
-  mod-libs += -l$(strip $(1))
+  shlibs += lib$(target).so
+  mod-libs += -l$(target)
+
   $(eval $(call library_share_perpare_varibales, $(1)))
-  flags1 := -c
-  flags1 += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
-  flags2 := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
+  compflags := -c
+  compflags += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
+  linkflags := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
 endef
 # usage: library_share_build <target>
 define library_share_build
 $(objs): %.o: %.c
 	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(CC)$(if $(flags1), $(flags1)) $$<
+	@$(CC)$(if $(compflags), $(compflags)) $$<
 lib$(strip $(1)).so: $(objs)
 	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(CC)$(if $(flags2), $(flags2)) -shared -o $$@ $$^$(if $(libs), $(libs))
+	@$(CC)$(if $(linkflags), $(linkflags)) -shared -o $$@ $$^$(if $(libs), $(libs))
 endef
 
 # usage: library_static_perpare_variables <target>
 define library_static_perpare_variables
-  cflags := $(if $(CFLAGS), $(CFLAGS))$(if $(stlib-cflags), $(stlib-cflags))
-  cflags += $(if $($(strip $(1))-cflags), $($(strip $(1))-cflags))
+  cflags := $(if $(CFLAGS), $(CFLAGS))
+  cflahs += $(if $(stlib-cflags), $(stlib-cflags))
+  cflags += $(if $($(target)-cflags), $($(target)-cflags))
   cppflags := -Iinclude
   cppflags += $(if $(CPPFLAGS), $(CPPFLAGS))
   cppflags += $(if $(stlib-cppflags), $(stlib-cppflags))
-  cppflags += $(if $($(strip $(1))-cppflags), $($(strip $(1))-cppflags))
+  cppflags += $(if $($(target)-cppflags), $($(target)-cppflags))
   ldflags := $(if $(LDFLAGS), $(LDFLAGS))
   ldflags += $(if $(stlib-ldflags), $(stlib-ldflags))
-  ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
+  ldflags += $(if $($(target)-ldflags), $($(target)-ldflags))
 
-  objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+  objs := $(if $($(target)-objs), $($(target)-objs), $(target).o)
   libs := $(if $(LIBS), $(LIBS))
   libs += $(if $(stlib-libs), $(stlib-libs))
-  libs += $(if $($(strip $(1))-libs), $($(strip $(1))-libs))
+  libs += $(if $($(target)-libs), $($(target)-libs))
 endef
 # usage: library_static_perpare <target>
 define library_static_perpare
-  stlibs += lib$(strip $(1)).a
-  mod-libs += -l$(strip $(1))
+  stlibs += lib$(target).a
+  mod-libs += -l$(target)
+  
   $(eval $(call library_static_perpare_variables, $(1)))
-  flags1 := -c
-  flags1 += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
-  flags2 := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
+  compflags := -c
+  compflags += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
 endef
 # usage: library_static_build <target>
 define library_static_build
 $(objs): %.o: %.c
 	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(CC)$(if $(flags1), $(flags1)) $$<
+	@$(CC)$(if $(compflags), $(compflags)) $$<
 lib$(strip $(1)).a: $(objs)
 	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(AR) crv $$@ $$^ >/dev/null
@@ -297,34 +301,34 @@ endef
 define object_relocatable_perpare_variables
   cflags := $(if $(CFLAGS), $(CFLAGS))
   cflags += $(if $(relo-cflags), $(relo-cflags))
-  cflags += $(if $($(strip $(1))-cflags), $($(strip $(1))-cflags))
+  cflags += $(if $($(target)-cflags), $($(target)-cflags))
   cppflags := -Iinclude
   cppflags += $(if $(CPPFLAGS), $(CPPFLAGS))
   cppflags += $(if $(relo-cppflags), $(relo-cppflags))
-  cppflags += $(if $($(strip $(1))-cppflags), $($(strip $(1))-cppflags))
+  cppflags += $(if $($(target)-cppflags), $($(target)-cppflags))
   ldflags := -L.
   ldflags += $(if $(LDFLAGS), $(LDFLAGS))
   ldflags += $(if $(relo-ldflags), $(relo-ldflags))
-  ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
+  ldflags += $(if $($(target)-ldflags), $($(target)-ldflags))
 
-  objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+  objs := $(if $($(target)-objs), $($(target)-objs), $(target).o)
   libs := $(if $(LIBS), $(LIBS))
   libs += $(if $(relo-libs), $(relo-libs))
-  libs += $(if $($(strip $(1))-libs), $($(strip $(1))-libs))
+  libs += $(if $($(target)-libs), $($(target)-libs))
 endef
 # usage: object_relocatable_perpare <target>
 define object_relocatable_perpare
-  relos += $(strip $(1)).o
+  relos += $(target).o
+
   $(eval $(call object_relocatable_perpare_variables, $(1)))
-  flags1 := -c
-  flags1 += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
-  flags2 := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
+  compflags := -c
+  compflags += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
 endef
 # usage: object_relocatable_build <taregt>
 define object_relocatable_build
 $(objs): %.o: %.c
 	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(CC) -c$(if $(flags1), $(flags1)) $$<
+	@$(CC) -c$(if $(compflags), $(compflags)) $$<
 $(strip $(1)).o: $(objs)
 	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
 	@$(LD) --no-gc-sections -o $$@ -r $$^
@@ -333,46 +337,47 @@ endef
 # usage: object_executable_perpare_variables <target>
 define object_executable_perpare_variables
   cflags := $(if $(CFLAGS), $(CFLAGS))$(if $(exec-cflags), $(exec-cflags))
-  cflags += $(if $($(strip $(1))-cflags), $($(strip $(1))-cflags))
+  cflags += $(if $($(target)-cflags), $($(target)-cflags))
   cppflags := -Iinclude
   cppflags += $(if $(CPPFLAGS), $(CPPFLAGS))
   cppflags += $(if $(exec-cppflags), $(exec-cppflags))
-  cppflags += $(if $($(strip $(1))-cppflags), $($(strip $(1))-cppflags))
+  cppflags += $(if $($(target)-cppflags), $($(target)-cppflags))
   ldflags := -L.
   ldflags += $(if $(LDFLAGS), $(LDFLAGS))
   ldflags += $(if $(mod-ldflags), $(mod-ldflags))
   ldflags += $(if $(exec-ldflags), $(exec-ldflags))
-  ldflags += $(if $($(strip $(1))-ldflags), $($(strip $(1))-ldflags))
+  ldflags += $(if $($(target)-ldflags), $($(target)-ldflags))
 
-  objs := $(if $($(strip $(1))-objs), $($(strip $(1))-objs), $(strip $(1)).o)
+  objs := $(if $($(target)-objs), $($(target)-objs), $(target).o)
   libs := $(if $(LIBS), $(LIBS))$(if $(mod-libs), $(mod-libs))
   libs += $(if $(exec-libs), $(exec-libs))
-  libs += $(if $($(strip $(1))-libs), $($(strip $(1))-libs))
+  libs += $(if $($(target)-libs), $($(target)-libs))
+
   mods-objs := $(if $(mods),$$(call module_target,relos, $(mods)))
   mods-libs := $(if $(mods), $$(call module_target, shlibs, $(mods)))
   mods-libs += $(if $(mods), $$(call module_target, stlibs, $(mods)))
 endef
 # usage: object_executable_perpare <target>
 define object_executable_perpare
-  execs += $(strip $(1))
+  execs += $(target)
+  
   $(eval $(call object_executable_perpare_variables, $(1)))
-  flags1 := -c
-  flags1 += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
-  flags2 := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
+  compflags := -c
+  compflags += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
+  linkflags := $(if $(cflags), $(cflags))$(if $(ldflags), $(ldflags))
   link := $(objs)$(if $(relos), $(relos))
   link += $(if $$(mods-objs), $$(mods-objs))
   link += $(if $(libs), $(libs))
   link += $(if $$(mods-libs), $$(mods-libs))
 endef
-
 # usage: object_executable_build <target>
 define object_executable_build
 $(objs): %.o: %.c FORCE
 	@$(call log, info, CC, $(if $(MOD_NAME),$(MOD_NAME)/)$$@)
-	@$(CC) $(if $(flags1), $(flags1)) $$<
+	@$(CC) $(if $(compflags), $(compflags)) $$<
 $(1): $(objs) $(relo-objs)
 	@$(call log, info, LD, $(if $(MOD_NAME),$(MOD_NAME)/)$$@ $(mods-libs))
-	@$(CC)$(if $(flags2), $(flags2)) -o $$@$(if $(link), $(link))
+	@$(CC)$(if $(linkflags), $(linkflags)) -o $$@$(if $(link), $(link))
 endef
 
 ## Build Object
@@ -392,14 +397,18 @@ endef
 ## Build
 # ======
 
+# usage: perpare_common_variables <type> <target>
+define perpare_common_variables
+  type := $(if $(strip $(3)),$(strip $(2))-$(strip $(1)),$(strip $(1)))
+  target :=  $(if $(strip $(3)),$(strip $(3)),$(strip $(2)))
+endef
 # usage: perpare <type> <target> <name>
 define perpare
- type := $(strip $(1))/$(strip $(2))
- target := $(strip $(3))
+  $(eval $(call perpare_common_variables, $(1), $(2), $(3)))
 endef
 # usage: perpare <type> <target> <name>
 define build
-  $(if $(findstring $(strip $(1)), module library object), ,
+  $(if $(findstring $(strip $(1)), object library module), ,
     $(error Not support this type:$(strip $(1))))
   $(eval $(call perpare, $(1), $(2), $(3)))
   $(eval $(call $(strip $(1))_perpare, $(2), $(3)))

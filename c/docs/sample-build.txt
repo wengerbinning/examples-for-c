@@ -1,4 +1,6 @@
 
+项目构建框架的源码文件。
+
 - rule.mk
 - toplevel.mk
 - scripts/build-help.sh*
@@ -42,4 +44,25 @@ issues:
 
 demands:
 
+- 
 
+
+框架说明
+=======
+
+
+全局变量
+-------
+
+- mods relos stlibs shlibs execs
+- mods-install mods-uninstall mods-clean
+
+
+局部变量
+-------
+
+- type target
+- cflags cxxflags cppflags ldflags 
+- dirs objs libs 
+- mods-objs mods-libs 
+- makeflags compflags linkflags links
