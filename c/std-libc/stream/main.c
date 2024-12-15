@@ -159,17 +159,18 @@ check_boundary:
     return length;
 }
 
-static int
-fio_init_multipart_form_data(
-    struct context *ctx,
-    const char *path
-)
+static int fio_init_multipart_form_data (struct context *ctx, const char *path)
 {
     FILE *stream;
+    char buffer[BUFIZE + 1];
+    
     unlink(path);
     stream = fopen(path, "wb");
     ctx->stream = stream;
-    fwri            te()
+    snprintf(buffer, BUFIZE, "--%s", ctx->boundary);
+    fwrite(buffer, 1, strlen(buffer), stream);
+
+    return 0;
 }
 
 static int
@@ -179,6 +180,11 @@ fio_output_multipart_form_data(
     size_t length
 )
 {
+    char buffer[BUFIZE + 1];
+    fwrite(data, length, 1, ctx->stream);
+    snprintf(buffer, BUFIZE, "\r\n--%s", ctx->boundary);
+    fwrite(buffer, 1, strlen(buffer), ctx->stream);
+
     return 0;
 }
 
@@ -187,8 +193,14 @@ fio_exit_multipart_form_data(
     struct context *ctx
 )
 {
+    char buffer[BUFIZE + 1];
+
+    snprintf(buffer, BUFIZE, "\r\n");
+    fwrite(buffer, 1, strlen(buffer), ctx->stream);
+
     if (ctx->stream)
         fclose(ctx->stream);
+    
 }
 
 int main (int argc, char *argv[]) {
@@ -208,11 +220,9 @@ int main (int argc, char *argv[]) {
         while (!feof(istream)) {
             fgets(buffer, BUFIZE, istream);
             hexdump(buffer, strlen(buffer));
+            fio_output_multipart_form_data(&ctx, buffer, strlen(buffer));
         }
         fio_exit_multipart_form_data(&ctx);
-
-
-
     } else if (0 == strcmp(prog, "ostream")) {
         istream = fopen(STREAM_BIN, "rb");
 
