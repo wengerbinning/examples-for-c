@@ -8,11 +8,11 @@
 
 
 typedef union test_flags {
-    unsigned int values[1];
-    struct {
-        unsigned int attr: 16;
-        unsigned int type: 8;
-    };
+        unsigned int values[1];
+        struct {
+            unsigned int attr: 16;
+            unsigned int type: 8;
+        };
 } test_flags_t;
 
 #define FLAGS_GET_ATTR(_flags) _FLAGS_GET_ATTR(_flags, test_flags_t)

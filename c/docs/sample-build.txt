@@ -35,7 +35,7 @@ mods, libs, objs
 
 - 构建目标支持:可链接文件/可执行文件/静态库文件/动态库文件/模块.
 - 构建目标可指定 cflags, cxxflags, cppflags, ldflags, objs, libs, dirs 参数;
-- 构建目标
+
 
 
 issues:

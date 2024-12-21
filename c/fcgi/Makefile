@@ -1,20 +1,16 @@
-ECHO := echo
 
-CFLAGS := -g
+TOPDIR ?= $(CURDIR)
 
-LIBS := -lfcgi
+include $(TOPDIR)/rule.mk
+# =========================================================================== #
 
-all: server
+CFLAGS := -std=c99
 
+LIBS += -lfcgi
 
-%.o: %.c
-	@$(ECHO) [CC] $^
-	@$(CC) -c $(CFLAGS) $(CFLAGS) $^
+iostream-objs := main.o
 
-server: server.o
-	@$(ECHO) [LD] $@
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+$(eval $(call build, object, executable, iostream))
 
-
-clean:
-	-rm -rf *.o *.a *.so
+# =========================================================================== #
+include $(TOPDIR)/toplevel.mk

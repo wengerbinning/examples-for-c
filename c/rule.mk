@@ -4,12 +4,17 @@
 # which can be overridden using environment variables in across compilation
 # environment.
 
-ECHO ?= echo
-MAKE ?= make
-RM   ?= rm
 CC   ?= gcc
 LD   ?= ld
 AR   ?= ar
+MAKE ?= make
+RM   ?= rm
+
+ifeq ($(shell  echo '\n' | wc -l),2)
+  ECHO ?= echo
+else
+  ECHO ?= echo -e
+endif
 
 export ECHO MAKE RM CC LD AR
 
