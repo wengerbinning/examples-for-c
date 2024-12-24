@@ -10,110 +10,64 @@
 #define MAX_PACK_IMAGE 4
 #define MAX_CNAME 64
 
-struct firmware_header {
-    unsigned int Signature;
-    char Name[MAX_PACK_IMAGE][MAX_CNAME];
-    unsigned int Size[MAX_PACK_IMAGE];
-    unsigned int Version[MAX_PACK_IMAGE];
-    unsigned short supported_bits[4];
-    unsigned short FwVerMask;
-    unsigned short reserved[8041];
-};
+
+// int main(int agrc, char *argv[]) {
+//     CURL *curl = curl_easy_init();
+
+//     /** Setting Curl Options */
+//     curl_easy_setopt(curl, CURLOPT_URL, url->url);
+//     /** Send Request */
+//     if ((ret = curl_easy_perform(curl) != CURLE_OK)) {
+//         return 0;
+//     }
+
+//     curl_easy_cleanup(curl);
+
+//     return 0;
+// }
 
 
-
-static size_t curl_func_write (void *ptr, size_t size, size_t nmemb, void *stream)
+size_t read_callback(char *buffer, size_t size, size_t nitems, void *priv)
 {
-    printf("pr=%p, size=%d, nmemb=%d, stream=%p\n", ptr, size, nmemb, stream);
-    printf("data:\n%s\n", ptr);
+    FILE *in = (FILE *)priv;
+    size_t bytes_read;
 
-    return nmemb;
+    /* I'm doing it this way to get closer to what the reporter is doing.
+     Technically we don't need to do this, we could just use the default read
+     callback which is fread. Also, 'size' param is always set to 1 by libcurl
+     so it's fine to pass as buffer, size, nitems, instream. */
+    printf("start read data ...\n");
+    bytes_read = fread(buffer, 1, 16, (FILE *)in);
+    printf("read %d data\n", bytes_read);
+
+  return bytes_read;
 }
 
-int curl_func_progress (void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)
-{
-    return 0;
-}
-
-
-
-
-
-LIST_HEAD(urls_list);
-unsigned urls_counter;
-
-
-
-
-
-int register_url (char *name, char *url) {
-    struct url_t *new_url;
-
-    new_url = url_new(url);
-
-    if (name)
-        strncpy(new_url->name, name, URL_MAXNAME);
-
-    new_url->id = urls_counter++;
-
-    list_add_tail(&new_url->list, &urls_list);
-
-    return new_url->id;
-}
-
-void unregister_url (struct url_t *url) {
-    list_del(&url->list);
-    url_free(url);
-}
+#define   B  (1)
+#define KiB  (1 * 1024)
+#define MiB  (1 * 1024 * 1024)
+#define GiB  (1 * 1024 * 1024 * 1024)
+#define MEM_SIZE(n, unit) ((n) * (unit))
 
 int main(int agrc, char *argv[]) {
-    char *urls[] = {
-        "http://10.0.0.10/released/grandstream/GWN/2024-04-02/v0.0/v0.0.0.1/images/prod/gwn7062efw.bin",
-        "https://10.0.0.10/released/grandstream/GWN/2024-04-02/v0.0/v0.0.0.1/images/prod/gwn7062efw.bin",
-        "tftp://10.0.0.10/released/grandstream/GWN/2024-04-02/v0.0/v0.0.0.1/images/prod/gwn7062efw.bin",
-        "ftp://10.0.0.10/released/grandstream/GWN/2024-04-02/v0.0/v0.0.0.1/images/prod/gwn7062efw.bin",
-        "http://10.0.0.10/released/grandstream/GWN/2024-04-02/v0.0/v0.0.0.2/images/prod/gwn7062efw.bin",
-        "http://10.0.0.10/released/grandstream/GWN/2024-04-02/v0.0/v0.0.0.1/images/prod/gwn7062efw.bin",
-        "http://10.0.0.10/debug",
-        NULL
-    };
+    CURL *curl;
+    CURLcode res;
 
-    struct url_t *p, *n;
-    struct list_head *list,*next;
-    struct firmware_header header;
-    int ret, i;
-    char *url;
-
-    printf("Start download resource info(%d) by libcurl ...\n", sizeof(header));
-
-    ret = curl_global_init(CURL_GLOBAL_ALL);
-
-    /* Curl context init */
-
-    for (i=0, url=urls[i++]; url != NULL; url=url=urls[i++]) {
-        printf("%d, %s\n", i, url);
-        register_url(NULL, url);
-    }
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
 
 
-    list_for_each_entry_safe (p, n, &urls_list, list) {
-        url_check(p);
-
-        printf("%p: id=%d, flags=0x%04X, url=%s\n", p, p->id, p->flags, p->url);
-
-        if (p->flags == 0x0600)
-            unregister_url(p);
-    }
+    curl_easy_setopt(curl, CURLOPT_POST, 1L);
+    curl_easy_setopt(curl, CURLOPT_URL, "http://127.0.0.1/api/cgi1");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, (curl_off_t)MEM_SIZE(128, B));
+    curl_easy_setopt(curl, CURLOPT_READDATA, (void *)stdin);
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 
 
-    list_for_each_prev_safe(list, next, &urls_list) {
-        p = list_entry(list, struct url_t, list);
-        unregister_url(p);
-    }
+    // curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "name=daniel&project=curl");
 
-    printf("urls_list is empty: %s\n", list_empty(&urls_list) ? "yes": "no");
-
-    /* Curl context exit */
+    res = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
 
     curl_global_cleanup();
 
