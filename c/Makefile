@@ -6,7 +6,7 @@ include $(TOPDIR)/rule.mk
 
 CFLAGS := -std=c99
 
-mdirs := std-libc fcgi curl
+mdirs := std-libc fcgi curl content-type
 $(eval $(foreach mod,$(mdirs),$(call build, module, $(mod))))
 
 
