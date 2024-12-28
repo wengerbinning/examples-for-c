@@ -1,10 +1,21 @@
 #ifndef __IOSTREAM_H__
 #define __IOSTREAM_H__
 
+#include <stdbool.h>
 
 struct context {
-    char *content_boundary;
+    
     FILE *stream;
+    int form_count;
+
+    char *content_boundary;
+    char *content_length;
+};
+
+
+
+struct form {
+    size_t offset;
 };
 
 #define STREAM_TXT "data.txt"
