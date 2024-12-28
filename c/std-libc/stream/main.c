@@ -1,5 +1,8 @@
 #include <stdio.h>
+
+#define _GNU_SOURCE
 #include <string.h>
+
 #include <stdbool.h>
 
 #include <libgen.h>
@@ -163,7 +166,7 @@ static int fio_init_multipart_form_data (struct context *ctx, const char *path)
 {
     FILE *stream;
     char buffer[BUFIZE + 1];
-    
+
     unlink(path);
     stream = fopen(path, "wb");
     ctx->stream = stream;
@@ -200,7 +203,7 @@ fio_exit_multipart_form_data(
 
     if (ctx->stream)
         fclose(ctx->stream);
-    
+
 }
 
 int main (int argc, char *argv[]) {
