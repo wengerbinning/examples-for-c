@@ -35,8 +35,8 @@ fio_input_multipart_form_data(
     size_t cofst, dofst, rofst, plen;
     char *boundary;
     char buffer[BUFIZE + 1];
-    bool start;
-
+    static bool start;
+    static int idx = 0;
     static bool cache = false;
     static size_t clen = 0      ;
     static char cbuffer[BUFIZE + 1];
@@ -81,6 +81,7 @@ fio_input_multipart_form_data(
         log_debug("check in data: %p/%d %p/%d %s", data, dofst, p0, plen, boundary);
     }
     while ( (p1 = (char *)memmem(p0, plen, boundary, strlen(boundary))) ) {
+        bool suffix = false;
         size  = p1 - p0;
         plen -= size;
 
@@ -91,11 +92,12 @@ fio_input_multipart_form_data(
             /* first data */
             log_notice("==== START ====");
             size -= 2;
+            idx = 1;
         }
 
         /* write form data end */
         if ( 0 < size ) {
-            log_notice("start: %5s, cache: %5s => %s",
+            log_notice("index: %d, start: %5s, cache: %5s => %s", idx++,
                 start ? "true" : "false",
                 cache ? "true" : "false",
                 p0);
@@ -114,6 +116,7 @@ fio_input_multipart_form_data(
             /* skip boundary suffix: \r\n */
             p0 += 2;
             plen -= 2;
+            suffix = true;
         }
 
         // printf("@@@@@ start: %s, cache: %s\n",
@@ -136,7 +139,7 @@ fio_input_multipart_form_data(
             clen = len;
 
             size = BUFIZE - clen;
-            /* copy data s*/
+            /* copy data */
             len = ((dlen - dofst) < size) ? ((dlen - dofst)) : size;
             memcpy(cbuffer + clen, (data + dofst), len);
             clen += len;
@@ -144,19 +147,27 @@ fio_input_multipart_form_data(
             p0 = cbuffer;
             plen = clen;
         } else if (cache) {
-            dofst += p0 - (cbuffer + cofst);
+
+            ofst = p0 - (cbuffer + cofst);
+            dofst += ofst;
             p0 = data + (dofst);
             plen = dlen - (dofst);
             cache = false;
 
-            log_debug("change cache to data 0x%x", dofst);
+            if (2 < plen && 0 == strncmp(p0, "\r\n", 2)) {
+                /* skip boundary suffix: \r\n */
+                p0 += 2;
+                plen -= 2;
+                suffix = true;
+            }
+            log_debug("change cache to data 0x%x/0x%x", dofst, ofst);
         }
 
         /* */
         if ( !cache && plen <= 2 ) {
             len = plen + strlen(boundary);
-            len += plen ? 2 : 0;
-            log_debug("cache1 data %d", len);
+            len += suffix ? 2 : 0; // FIXME - suffix: /r/n
+            log_debug("cache1 data %d/%d/%d", len, plen, strlen(boundary));
             hexdump(p1, len);
             memcpy(cbuffer, p1, len);
             cache = true;
@@ -196,14 +207,23 @@ fio_input_multipart_form_data(
         }
 
         /* */
-        log_debug("demo");
-        hexdump( cbuffer, len );
+        // if (start)
+        //     idx++;
+
+        memcpy(buffer, cbuffer, len);
+        log_notice("#index: %d, start: %5s, cache: %5s => %s", idx,
+                start ? "true" : "false",
+                cache ? "true" : "false",
+                buffer);
+        // log_debug("demo");
+        hexdump( buffer, len );
         // if ( form_data_write(&form, cbuffer, clen) != clen ) {
         //     form_data_exit( &form );
         //     ret = ctx->retVal;
         //     // Log(LOG_DEBUG, "return code %d", ret);
         //     goto exit0;
         // }
+        start = false;
 
         /* */
         cache = false;
@@ -216,9 +236,12 @@ fio_input_multipart_form_data(
             cache = true;
             clen = len;
 
+            log_debug("cache2 data %d/%ld", cofst, clen);
+            hexdump(cbuffer + ofst, len);
+
             p0 = cbuffer;
             plen = clen;
-            goto check_boundary;
+            // goto check_boundary;
         }
         cofst = clen;
     }
@@ -234,13 +257,13 @@ fio_input_multipart_form_data(
         cache = true;
         clen = cofst + len;
 
-        log_debug("cache2 data %d/%ld", cofst, clen);
+        log_debug("cache3 data %d/%ld", cofst, clen);
         hexdump(data + rofst, len);
-
+        dofst = rofst;
         rofst += len;
 
         p0 = cbuffer;
-        len = clen;
+        plen = clen;
         goto check_boundary;
     }
 
