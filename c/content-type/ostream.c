@@ -10,7 +10,7 @@
 #include "iostream.h"
 
 
-#define BUFIZE 16
+#define BUFIZE 256
 
 
 
@@ -23,22 +23,26 @@
 
 
 
-size_t form_write(struct context *ctx, struct form *form, char *buf, size_t len) 
+size_t form_write(struct context *ctx, struct form *form, char *buf, size_t len)
 {
-    if (form->offset == 0 ) {
-        if(1 < ctx->form_count)
-            printf("\n [%2d] ", ctx->form_count);
-        else
-            printf(" [%2d] ", ctx->form_count);
+    form->index = ctx->form_count;
+    // log_debug("%d offset:%d, %s", ctx->form_count, form->offset, buf);
+
+    if (form->offset == 0 && form->end) {
+        printf("[%02d] %s\n", form->index, buf);
+    } else {
+        snprintf(form->buffer + form->offset, FORM_BUFZIE - form->offset, "%s", buf);
+        if ( form->end )
+            printf("[%02d] %s\n", form->index, form->buffer);
     }
-    if (0 < len)
-        printf("%s", buf);
 
     return len;
 }
 
 int form_finish (struct context *ctx, struct form *form) {
-    printf("\n");
+    if (form->end) {
+        printf("[%02d] %s\n", form->index, form->buffer);
+    }
     return 0;
 }
 
@@ -56,7 +60,6 @@ fio_input_multipart_form_data(
     size_t dofst = 0, rofst = 0;
     size_t ofst, size, len, cofst, plen;
     char buffer[BUFIZE + 1];
-    static bool start;
     static int idx = 0;
     static bool cache = false;
     static size_t clen = 0;
@@ -84,7 +87,7 @@ fio_input_multipart_form_data(
 
         // log_debug("cache0 data (cache:%d/%d, data:%d/%d)", cofst, clen, dofst, rofst);
         // hexdump(cbuffer, clen);
-       
+
         p0 = cbuffer;
         plen = clen;
     }
@@ -104,8 +107,9 @@ fio_input_multipart_form_data(
 
         size  = p1 - p0;
         plen -= size;
+
         if ((4 <= size) && (0 == strncmp(p1 - 4, "\r\n--", 4))) {
-            memset(p1 - 4, 0, 2);
+            memset(p1 - 4, 0, 4);
             size -= 4;
         } else if ( (2 <= size) && 0 == strncmp(p1 - 2, "--", 2) ) {
             /* first data */
@@ -113,23 +117,26 @@ fio_input_multipart_form_data(
             size -= 2;
             idx = 1;
             ctx->form_count = idx;
+            form->offset = 0;
         }
 
         /* write form data end */
         if ( 0 < size ) {
-            ctx->form_count = idx++;;
+            ctx->form_count = idx++;
+            form->end = true;
             // log_notice("index: %d, cache:%s => %d:%s", ctx->form_count,
             //     cache ? "true" : "false", strlen(p0), p0);
             // hexdump(p0, size);
             form_write(ctx, form, p0, size);
-            
+
         }
 
         /* next form */
-        start = true;
         form->offset = 0;
+        form->end = false;
         p0 = p1 + strlen(boundary);
         plen -= strlen(boundary);
+
         if (plen == 4 && 0 == strncmp(p0, "--\r\n", 4)) {
             form_finish(ctx, form);
             log_notice("==== END1 ====");
@@ -188,6 +195,10 @@ fio_input_multipart_form_data(
         }
 
         /* */
+       if (!cache) {
+            dofst = p0 - data;
+            rofst = dofst;
+        }
         if (!cache && !suffix) {
             len = plen + strlen(boundary);
             memcpy(cbuffer, (p0 - strlen(boundary)), len);
@@ -195,14 +206,11 @@ fio_input_multipart_form_data(
             cofst = 0;
             clen = len;
             rofst += plen;
-          
-            // log_debug("cahce1 data %d, data %d/%d", cofst, dofst, rofst);
+
+            // log_debug("cahce1 cache:%d/%d, data:%d/%d", cofst, clen, dofst, rofst);
             // hexdump(cbuffer, clen);
         }
-        if (!cache) {
-            dofst = p0 - data;
-            rofst = dofst;
-        }
+
     }
 
 
@@ -225,6 +233,7 @@ fio_input_multipart_form_data(
         if (form->offset == 0) {
             ctx->form_count++;
         }
+        form->end = false;
         // log_notice("#index: %d, cache:%s => %d:%s", ctx->form_count + 1,
         //     cache ? "true" : "false", strlen(buffer), buffer);
         // hexdump( buffer, len );
@@ -241,6 +250,7 @@ fio_input_multipart_form_data(
 
             // log_debug("change2 cahce to data (data:%d/%d)", dofst, rofst);
             // hexdump(p0, plen);
+
         } else if ( size <= BUFIZE ) {
             ofst = clen - size;
             memcpy(buffer, cbuffer + ofst, size);
@@ -259,7 +269,6 @@ fio_input_multipart_form_data(
     }
 
     /* cache data */
-    // log_debug("cache:%d data ---- %d/%d, %d/%d", cache, cofst, clen, dofst, rofst);
     ofst = cache ? cofst : 0;
     len = cache ? clen : 0;
     clen = len;
@@ -301,8 +310,7 @@ int main(int agrc, char *argv[])
         istream = fopen(STREAM_BIN, "rb");
         while (!feof(istream)) {
             rlen = fread(buffer, 1, BUFIZE, istream);
-            // hexdump(buffer, rlen);
-            // printf("read %d(0x%x) data ...\n", rlen, rlen       );
+
             wlen = fio_input_multipart_form_data(&ctx, buffer, rlen);
         }
 
