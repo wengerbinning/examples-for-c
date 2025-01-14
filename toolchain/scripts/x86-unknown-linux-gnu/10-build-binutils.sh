@@ -6,6 +6,7 @@ warning() { echo -en "\e[33m"; echo -en $@; echo -en "\e[0m\n"; }
 notice()  { echo -en "\e[32m"; echo -en $@; echo -en "\e[0m\n"; }
 note()    { echo -en "\e[34m"; echo -en $@; echo -en "\e[0m\n"; }
 debug()   { echo -en "\e[32m"; echo -en $@; echo -en "\e[0m\n"; }
+
 #
 run_cmd() {
 	local idx=${_cmd_count:-0}
@@ -34,14 +35,18 @@ cmd_total() {
 	done
 }
 
+
+
+
 ##
-ARCH=x86_64
-TARGET="x86_64-unknown-linux-gnu"
-CROSS_PREFIX="x86_64-unknown-linux-gnu-"
+ARCH=x86
+TARGET="x86-unknown-linux-gnu"
+CROSS_PREFIX="x86-unknown-linux-gnu-"
 #
 TOOLCHAIN_HOME="/opt/toolchains"
 TOOLCHAIN_NAME="toolchain-${TARGET}"
 TOOLCHAIN_PATH="${TOOLCHAIN_HOME}/${TOOLCHAIN_NAME}"
+
 
 ##
 WORKPATH=".build"
@@ -54,7 +59,6 @@ test -d "$WORKPATH" || mkdir -p $WORKPATH
 cd $WORKPATH && {
     notice "Start build project ..."
 ###############################################################################
-
 #
 run_cmd $SRC_PATH/configure --prefix='' \
 	--target=$TARGET \
