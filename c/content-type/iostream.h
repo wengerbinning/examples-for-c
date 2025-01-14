@@ -16,10 +16,10 @@ struct context {
 #define FORM_BUFZIE 1024
 
 struct form {
-    int index;
-    size_t offset;
-    bool end;
-    char buffer[FORM_BUFZIE + 1];
+        int index;
+        size_t offset;
+        bool end;
+        char buffer[FORM_BUFZIE + 1];
 
 };
 

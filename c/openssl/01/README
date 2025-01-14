@@ -4,8 +4,9 @@ libcrypto.so
 openssl dgst -sha1 -sign gwn_firmware_private data.bin  | hexdump --format '16/1 "%02X " "\n"'
 
 
+openssl genrsa -out gwn_firmware_private 2048
 
-
+openssl rsa -in gwn_firmware_private -pubout -out gwn_firmware_public
 
 
 

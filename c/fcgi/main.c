@@ -217,7 +217,7 @@ int server_main (char *name, int port, char *dst, int argc, char *argv[]) {
         caddr = FCGX_GetParam("REMOTE_ADDR", req->envp);
         cport = FCGX_GetParam("REMOTE_PORT", req->envp);
         buf = FCGX_GetParam("REQUEST_METHOD", req->envp);
-        buf1 = FCGX_GetParam("HTTP_USER_AGENT", req->envp);
+
         if (STRCMP(buf1, "FIOFCGI")) {
             fiofcgi = 1;
             syslog(LOG_DEBUG, "Accept %s:%s %s", caddr, cport, buf);

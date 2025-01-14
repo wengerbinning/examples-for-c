@@ -1,0 +1,39 @@
+
+
+	qemu-system-x86_64 -name virtual-machine \
+		-nographic \
+		-smp 1 -cpu qemu64 \
+		-m 1G \
+		-kernel vmlinuz -append "console=ttyS0, loglevel=8" \
+		-initrd initramfs.img
+
+
+####
+
+qemu-system-x86_64 -name virtual-machine \
+	-nographic \
+	-smp 1 -cpu qemu64 \
+	-m 2G \
+	-kernel vmlinuz -append "console=ttyS0" \
+	-initrd initramfs.img \
+	-net nic -net user \
+
+####
+
+#
+	ip tuntap add vtap0 mode tap
+ip addr add 192.168.1.1/24 dev vtap0
+ip link set vtap0 up
+
+#
+qemu-system-x86_64 -name virtual-machine \
+	-nographic \
+	-smp 1 -cpu qemu64 \
+	-m 2G \
+	-kernel vmlinuz -append "console=ttyS0" \
+	-initrd initramfs.img \
+	-net nic -net tap,ifname=vtap0,script=no
+
+#
+ip addr add 192.168.1.2/24 dev eth0
+ip link set eth0 up

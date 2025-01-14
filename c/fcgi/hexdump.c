@@ -44,8 +44,7 @@ void hexdump (const void *data, unsigned int size) {
 	if (!data)
 		return;
 
-	env = getenv("HEXDUMP_COLUM");
-	col = env ? atoi(env) : HEXDUMP_COLUM;
+
 	env = getenv("HEXDUMP_CHAR1");
 	chr1 = env ? *(char *)env : HEXDUMP_CHAR1;
 	env = getenv("HEXDUMP_ASCII");
