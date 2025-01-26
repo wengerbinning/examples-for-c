@@ -13,7 +13,7 @@ int lock() {
 	int lock, ret;
 	char buffer[BUFIZE + 1];
 
-	if ((lock = open(LOCK, O_CREAT | O_RDWR, 0600)) < 0) {
+	if ((lock = open(LOCK, O_CREAT | O_RDWR | O_TRUNC, 0600)) < 0) {
 		return -1;
 	}
 

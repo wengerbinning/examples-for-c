@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -18,9 +20,35 @@
 #define VERSTR(n) VER_MAJOR(n),VER_MINOR(n), VER_PHASE(n), VER_PATCH(n)
 
 
-int main (int argc, char *argv[]) {
+#define HOME0 "0"
+#define HOME1 "1"
+#define BUFIZE 64
 
-    printf("");
+int main (int argc, char *argv[]) {
+    int fd;
+    char path0[BUFIZE + 1], path1[BUFIZE + 1];
+
+    if (access(HOME0, F_OK) < 0) {
+        mkdir(HOME0, 0755);
+    }
+    if (access(HOME1, F_OK) < 0) {
+        mkdir(HOME1, 0755);
+    }
+
+    snprintf(path0, BUFIZE, "%s/%s", HOME0, "demo.txt");
+    snprintf(path1, BUFIZE, "%s/%s", HOME1, "test.txt");
+
+
+    if (0 <= (fd = open(path0, O_CREAT | O_RDWR | O_TRUNC, 0644))) {
+        close(fd);
+    }
+
+
+
+    if (rename(path0, path1) < 0) {
+        printf("error:\n", strerror(errno));
+    }
+
     return 0;
 }
 
