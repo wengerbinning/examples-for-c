@@ -273,7 +273,7 @@ endef
 define library_static_perpare
   stlibs += lib$(target).a
   mod-libs += -l$(target)
-  
+
   $(eval $(call library_static_perpare_variables, $(1)))
   compflags := -c
   compflags += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
@@ -365,7 +365,7 @@ endef
 # usage: object_executable_perpare <target>
 define object_executable_perpare
   execs += $(target)
-  
+
   $(eval $(call object_executable_perpare_variables, $(1)))
   compflags := -c
   compflags += $(if $(cflags), $(cflags))$(if $(cppflags), $(cppflags))
