@@ -1,0 +1,46 @@
+
+/*  */
+
+#inline {
+    display: inline;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+#inline-block {
+    display: inline-block;
+}
+
+#inline-flex {
+    display: inline-flex;
+}
+
+#inline-flexbox {
+    display: inline-flexbox;
+}
+
+#inline-block {
+    display: -ms-inline-grid;
+}
+
+/*  */
+
+#block {
+
+}
+
+/*  */
+
+#flex {
+    display: flex;
+}
+
+
+
+
+/*  */
+
+#grid {
+    display: grid;
+}

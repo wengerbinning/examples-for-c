@@ -1,0 +1,48 @@
+/* element Selecter */
+
+* {
+	align-content: center;
+}
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+
+	height: 100%;
+	width: 100%;
+
+	/* position:relative;
+	top : 0px;
+	left: 0px; */
+}
+
+div {
+	margin: 0px;
+	padding: 0px;
+
+	/* outline:outline-style outline-width;
+	outline-style: dashed;
+	outline-width: 2px; */
+
+	border-style: solid;
+	border-width: 1px;
+
+	height: auto;
+	width: auto;
+
+	background-color: wheat;
+}
+
+/* ID Selecter */
+
+#page {
+	/* background-color: blanchedalmond; */
+
+
+	height: 100%;
+	width: 100%;
+
+	border-style: none;
+
+	background-color: rosybrown;
+}
