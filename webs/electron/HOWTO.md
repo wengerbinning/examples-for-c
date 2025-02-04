@@ -1,20 +1,24 @@
 
+## 开发环境
 
-## npm
+### WSL debian
 
-###  项目开发
+```
+sudo apt install libcups2
+sudo apt install npm libnss3 libatk1.0-0 libatk-bridge2.0-0
+sudo apt install libgtkd-3-0 libasound2
+```
 
-
-#### 准备环境
+##  项目开发
 
 ```shell
 npm init
 ```
 
+### 项目环境
 
 ```shell
 # npm config set registry https://mirrors.huaweicloud.com/repository/npm/
-
 npm install --save-dev electron
 ```
 
