@@ -1,33 +1,43 @@
 
-include scripts/toolchain.mk
+targets := helloworld
 
-objects=main1.o foo.o main2.o bar.o
-mains=main1.o main2.o
-src=$(PWD)/demk
-export src
+
+
+helloworld-type=shared-library
+helloworld-static-library=y
+# helloworld-relocatable-object=y
+# helloworld-executable-object=y
+
+
+
 
 Q=@
 
-ECHO=echo
-INSTALL=
-MAKELEVEL=1
+build_object = echo $1 $(type)
+
+define build_library_target
+	$(Q)case $(if $($(target)-type),$($(target)-type),shared-library) in \
+		*shared-library) $(call build_library_target, $(target))   ;; \
+		*static-library) $(call build_library_target, $(target))   ;; \
+		esac
+endef
+
+# .SECONDEXPANSION:
+define build_target
+	$(Q)target=$(strip $(1))
+	$(Q)case $(if $($(target)-type),$($(target)-type),executable-object) in \
+		*include)   echo $(type)   ;; \
+		*object) 	$(build_object )   ;; \
+		*library)   $(call build_library_target, $(target))   ;; \
+		*license)	echo $($(target)-type)   ;; \
+		*document)  echo $($(target)-type)   ;; \
+		*config)    echo $($(target)-type)   ;; \
+		*data)      echo $($(target)-type)   ;; \
+		*script)	echo $($(target)-type)   ;; \
+		*)			echo $(target) ; \
+		esac
+endef
+
+
 all:
-
-MAKEFILES=$(abspath $(lastword $(MAKEFILE_LIST)))
-
-
-prepare: FORCE
-	$(Q)$(ECHO) $(MAKELEVEL) $(MAKEFILE_LIST)
-	$(Q)$(MAKE) $(prepare-toolchain)
-
-
-all: prepare
-	$(Q)$(ECHO) TOPDIR: $(CURDIR)
-	$(Q)$(ECHO) $(filter-out $(mains),$(objects))
-
-
-
-
-.PHONY: prepare all
-
-FORCE:
+	$(foreach target, $(targets), $(call build_target, $(target)))
