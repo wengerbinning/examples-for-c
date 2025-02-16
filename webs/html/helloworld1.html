@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<!--  -->
+<head>
+<title>HTML Labs</title>
+<style>
+:root {
+	--flex-item-width: calc((100% - 200px) / 10);
+}
+* {
+	outline: black solid thin;
+}
+
+html {
+	margin: 0px;
+	padding: 0px;
+
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	margin: 0px;
+	border: 5px solid red;
+	padding: 10px;
+
+	width: calc(100% - 30px);
+	height: calc(100% - 30px);
+
+	/* display: grid;
+	grid-row: auto;
+	grid-template-columns:100%;
+	grid-template-rows: 10% 90% 10%; */
+
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+#flex {
+	padding: 30px;
+	border-radius: 25px;
+
+	width: 50%;
+	height: 90%;
+
+	display: inline-flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: flex-start;
+	align-items: flex-start;
+
+}
+
+.flex-item {
+	margin: 5px;
+	border-radius: 5px;
+	padding: 5px;
+
+	width: var(--flex-item-width, calc((100% - 40px) / 2));
+	height: 20px;
+
+	/* flex: 0 1 auto; */
+	/* flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 100px; */
+
+
+	text-align: center;
+	line-height: 100%;
+
+
+}
+
+</style>
+</head>
+
+<!--  -->
+<body>
+	<div id="flex">
+	<!--
+		<div class="flex-item">V0</div>
+		<div class="flex-item">V1</div>
+		<div class="flex-item">V2</div>
+		<div class="flex-item">V3</div>
+		<div class="flex-item">V4</div>
+		<div class="flex-item">V5</div>
+		<div class="flex-item">V6</div>
+		<div class="flex-item">V7</div>
+		<div class="flex-item">V8</div>
+		<div class="flex-item">V9</div>
+	-->
+	</div>
+</body>
+
+<script>
+version = [
+	{
+		ver_major: 0x01,
+		ver_minor: 0x03,
+		ver_phase: 0x04,
+		ver_patch: 0x0,
+		release_build:'',
+		ver_format: '',
+		release_date: "2025-02-16",
+		release_label:["RC", "Alpha"],
+		release_state: "",
+		release_descs: "",
+		release_features: "",
+		release_issues:"",
+
+	},
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x1 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x2 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x3 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x4 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x5 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x6 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x7 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x8 },
+	{ release_date: "2025-02-16", ver_major: 0x01, ver_minor: 0x03, ver_phase: 0x04, ver_patch: 0x9 },
+]
+
+console.log(version)
+
+const fragment = document.createDocumentFragment();
+
+for (let i = 0; i < version.length; i++) {
+	console.log(version[i])
+    const ver_item = document.createElement('div');
+	ver_item.setAttribute('class', 'flex-item');
+    ver_item.textContent = `元素 ${version[i].ver_patch}`;
+    fragment.appendChild(ver_item);
+}
+
+document.getElementById('flex').appendChild(fragment);
+
+
+
+// window 事件: 页面加载完成的事件。
+window.addEventListener('onload', function() {
+	console.log("");
+});
+
+// window 事件：窗口大小变化
+let timeout;
+window.addEventListener('resize', function() {
+	clearTimeout(timeout);
+	timeout = setTimeout(function() {
+		const root = document.querySelector(':root');
+		let cols = 5;
+		let resv = cols * 20;
+		console.log( `'calc((100% - ${resv}px) / ${cols})'`);
+		root.style.setProperty('--flex-item-width', `calc((100% - ${resv}px) / ${cols})`);
+	}, 200); //200ms
+})
+
+
+// //
+// document.addEventListener('DOMContentLoaded', function() {
+//     console.log('DOM 已加载');
+//     // 在这里执行初始化代码
+// });
+
+</script>
+</html>
