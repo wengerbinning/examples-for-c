@@ -4,9 +4,8 @@ targets := helloworld
 
 
 helloworld-type=shared-library
-helloworld-static-library=y
-# helloworld-relocatable-object=y
-# helloworld-executable-object=y
+
+
 
 
 

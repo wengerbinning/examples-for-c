@@ -1,9 +1,0 @@
-Q    ?= @
-ECHO ?= echo
-
-
-
-toolchain:
-	$(Q)$(ECHO) $(MAKELEVEL) $(MAKEFILE_LIST)
-	$(Q)env > ./.toolchain.env
-	$(Q)$(ECHO) $(src)
