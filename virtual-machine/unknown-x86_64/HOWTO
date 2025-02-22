@@ -1,39 +1,158 @@
 
 
-	qemu-system-x86_64 -name virtual-machine \
-		-nographic \
-		-smp 1 -cpu qemu64 \
-		-m 1G \
-		-kernel vmlinuz -append "console=ttyS0, loglevel=8" \
-		-initrd initramfs.img
+qemu-system-x86_64 -name virtual-machine \
+	-nographic \
+	-smp 1 -cpu qemu64 \
+	-m 1G \
+	-kernel vmlinuz -append "console=ttyS0, loglevel=8" \
+	-initrd initramfs.img
 
 
 ####
 
 qemu-system-x86_64 -name virtual-machine \
-	-nographic \
-	-smp 1 -cpu qemu64 \
-	-m 2G \
+	-nographic -smp 1 -cpu qemu64 -m 2G \
 	-kernel vmlinuz -append "console=ttyS0" \
-	-initrd initramfs.img \
-	-net nic -net user \
+	-initrd initramfs.img
 
 ####
+ip netns list
+sudo ip netns add ns1
+sudo ip netns add ns2
+#
+# NS1
+#
+# 1. 添加virtual ethernet接口 veth0 <-> veth1
+sudo ip link add veth0 type veth peer name veth1
+# 2. 将veth1添加命令空间ns1
+sudo ip link set veth1 netns ns1
+# 3. 设置veth1的IP地址并开启接口
+sudo ip netns exec ns1 ip addr add 10.0.0.2/24 dev veth1
+sudo ip netns exec ns1 ip link set dev veth1 up
+# 4. 设置veth0的IP地址并开启接口
+sudo ip addr add 10.0.0.1/24 dev veth0
+sudo ip link set dev veth0 up
+#
+# NS2
+#
+# 1. 添加virtual ethernet接口 veth2 <-> veth3
+sudo ip link add veth2 type veth peer name veth3
+# 2. 将veth3添加到命令空间ns2
+sudo ip link set veth3 netns ns2
+# 3. 设置veth3的IP地址并开启接口
+sudo ip netns exec ns2 ip addr add 10.1.0.2/24 dev veth3
+sudo ip netns exec ns2 ip link set dev veth3 up
+# 4. 设置veth2的IP地址并开启接口
+sudo ip addr add 10.1.0.1/24 dev veth2
+sudo ip link set dev veth2 up
 
 #
-	ip tuntap add vtap0 mode tap
-ip addr add 192.168.1.1/24 dev vtap0
-ip link set vtap0 up
+# ns1
+#
+# 1.
+sudo ip tuntap add dev tap0 mode tap
+# 2.
+sudo ip link set tap0 netns ns1
+# 3.
+sudo ip netns exec ns1 ip addr add 192.168.1.1/24 dev tap0
+sudo ip netns exec ns1 ip link set tap0 up
+sudo ip netns exec ns1 ip addr
+#
+# ns2
+#
+# 1.
+sudo ip tuntap add dev tap1 mode tap
+# 2.
+sudo ip link set tap1 netns ns2
+# 3.
+sudo ip netns exec ns2 ip addr add 192.168.2.1/24 dev tap1
+sudo ip netns exec ns2 ip link set tap1 up
+sudo ip netns exec ns2 ip addr
+#
+
+
+
+
+#
+sudo ip tuntap add tap1 mode tap
+sudo ip link set tap1 up
+sudo ip addr add 192.168.1.1/24 dev tap1
+#
+sudo ip tuntap add tap2 mode tap
+sudo ip link set tap2 up
+sudo ip addr add 192.168.2.1/24 dev tap2
 
 #
 qemu-system-x86_64 -name virtual-machine \
-	-nographic \
-	-smp 1 -cpu qemu64 \
-	-m 2G \
+	-nographic -smp 1 -cpu qemu64 -m 2G \
 	-kernel vmlinuz -append "console=ttyS0" \
 	-initrd initramfs.img \
-	-net nic -net tap,ifname=vtap0,script=no
+	-net nic,netdev=n1 -netdev tap,id=n1,ifname=tap1,script=no \
+	-net nic,netdev=n2 -netdev tap,id=n2,ifname=tap2,script=no
+#
 
 #
 ip addr add 192.168.1.2/24 dev eth0
 ip link set eth0 up
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+
+
+qemu-system-x86_64 -net nic,model=help
+
+
+# -devic      e virtio-net,netdev=n1
+-net nic
+
+
+-nic tap
+-nic vde
+-nic user
+-nic bridge
+-nic l2tpv3
+
+
+
+-net tap
+-net vde
+-net user
+
+# -netdev bridge
+-net bridge,br=vbr0,id=n1
+-
+-net socket
+-net l2tpv3
+
+
+
+
+
+sudo qemu-system-x86_64 -name virtual-machine \
+	-nographic -smp 1 -cpu qemu64 -m 2G \
+	-kernel vmlinuz -append "console=ttyS0" \
+	-initrd initramfs.img \
+	-netdev tap,id=nd0,ifname=tap0,script=no \
+	-netdev tap,id=nd1,ifname=tap1,script=no \
+	-device e1000,netdev=nd0
+

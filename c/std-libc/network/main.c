@@ -71,6 +71,11 @@ int submask(int mask) {
 
 struct subnet * subnet_new_ipaddr(const char *str) {
     char *pattern = "([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})/[(0-9){1,2}]";
+    regex_t regex;
+    size_t nmatch = 3;
+    regmatch_t pmatch[3];
+    regcomp(&regex, pattern, REG_EXTENDED);
+
 }
 
 
